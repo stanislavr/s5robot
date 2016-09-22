@@ -1,0 +1,1 @@
+This folder shall only contain code for the HCS12 platform controller.
