@@ -61,6 +61,14 @@
 #define encAmask 0b00000001
 #define encBmask 0b00000010
 
+// Speed conversion between TCNT ticks and mm/s
+// speed(mm/s) = 1e7 / (TCNT ticks * 73)
+#define period_factor 10000000u
+#define period_conversion 73u
+
 // Function prototypes
 void configureDCM(void);	// Configure parameters for DC motor operation
 void dcmControl(unsigned char speed, unsigned char direction, unsigned char motor);	// Function for open-loop control of the motors
+unsigned int speed_mms(unsigned long period);	// Convert period in TCNT ticks to mm/s
+unsigned char getTargetSpeedA(void);			// Returns motor A target speed in mm/s
+unsigned char getTargetSpeedB(void);			// Returns motor B target speed in mm/s

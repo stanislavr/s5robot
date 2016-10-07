@@ -8,6 +8,7 @@
 #include "stepper.h"
 #include "servo.h"
 #include "dcm.h"
+#include "spi.h"
 
 unsigned char greeting[] = "Hello World ";
 
@@ -35,6 +36,9 @@ void main(void) {
   configureDCM();
   configureServo();
   configureHB();
+  configureMotorControl();
+  configureSPI();
+  configureDAC();
   configureSCI();
   configureStepper();  
   
@@ -46,7 +50,7 @@ void main(void) {
   for(;;) {
     switch(consumeSCI()) {
       // If the buffer is empty, nothing to do.
-      case bufEmpty:
+      case bufEmpty:        
         break;
 
       // Case A == Configure all modules

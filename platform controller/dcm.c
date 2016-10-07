@@ -8,6 +8,8 @@
 // Global variables to control the DC Motors
 unsigned char PWMDTY_A = 0;	// Duty cycle for Motor A (from 0 - 100)
 unsigned char PWMDTY_B = 0;	// Duty cycle for Motor B (from 0 - 100)
+unsigned char targetA = 0;	// Target speed for Motor A in mm/s
+unsigned char targetB = 0;	// Target speed for Motor B in mm/s
 unsigned char dcmA_dir = 0; // Currently set direction for Motor A
 unsigned char dcmB_dir = 0; // Currently set direction for Motor B
 
@@ -53,17 +55,18 @@ void configureDCM(void) {
 
 //;**************************************************************
 //;*                 dcmControl
-//;*	Sets speed of motor based on duty cycle of 0-100%
+//;*	Sets speed of motor based on speed in mm/s
 //;*	Sets direction (fwd, reverse)
 //;*
 //;*	Inputs: motor - 1 = left, 2 = right
-//;*			speed - 0-100% (just duty cycle)
+//;*			speed - 0-256 mm/s
 //;*			direction - 1 = forward, 2 = reverse, 0 = brake
 //;*
 //;**************************************************************  
 void dcmControl(unsigned char speed, unsigned char direction, unsigned char motor) {
 	if(motor == 1) {
 		dcmPWM_SET_DUTY_A(speed);
+		targetA = speed;
 	
 		if(direction != dcmA_dir) {
 			dcmA_dir = direction;
@@ -87,7 +90,8 @@ void dcmControl(unsigned char speed, unsigned char direction, unsigned char moto
 
 	else {
 		dcmPWM_SET_DUTY_B(speed);
-
+		targetB = speed;
+		
 		if(direction != dcmB_dir) {
 			dcmB_dir = direction;
 			switch(direction) {
@@ -108,3 +112,36 @@ void dcmControl(unsigned char speed, unsigned char direction, unsigned char moto
 		}
 	} //end of control for right motor
 }//end of dcmControl
+
+
+//;**************************************************************
+//;*                 speed_mms()
+//;*  Return speed in mm/s converted from period in TCNT ticks
+//;**************************************************************
+unsigned int speed_mms(unsigned long period) {
+  static unsigned int speed;
+  speed = period_factor / (period * period_conversion);
+  return(speed);
+}//end of speed_cms()
+
+
+//;**************************************************************
+//;*                 getTargetSpeedA()
+//;*  Return motor A target/set speed in mm/s
+//;**************************************************************
+unsigned char getTargetSpeedA(void) { 
+  DisableInterrupts;
+  return targetA;
+  EnableInterrupts;
+}//end of getTargetSpeedA()
+
+
+//;**************************************************************
+//;*                 getTargetSpeedB()
+//;*  Return motor A target/set speed in mm/s
+//;**************************************************************
+unsigned char getTargetSpeedB(void) { 
+  DisableInterrupts;
+  return targetB;
+  EnableInterrupts;
+}//end of getTargetSpeedB()
