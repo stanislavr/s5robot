@@ -7,7 +7,11 @@
 #include "dcm.h"
 #include "spi.h"
 
-// Global variables for DC Motor Encoder Readings
+// Temporary global variables to allow for tuning of gains
+unsigned char gainP = 2;
+unsigned char gainI = 2;
+
+// Global variables for DC Motor Encoder processing & control
 static signed long edgeA1; //Encoder A, time of 1st rising edge
 static signed long edgeA2; //Encoder A, time of 2nd rising edge
 static unsigned char edgeA1ovf;   //Encoder A, value of overflowCount at 1st rising edge
@@ -40,8 +44,15 @@ unsigned char periodBcount = 0;          // Number of filled elements in the buf
 static unsigned char hbCount = 0;
 
 // Error between set speed and recorded speed.
-static signed char errorA;   // Error between speedA (mm/s from encoder) to PWMDTY_A which is currently set motor speed in mm/s
-static signed char errorB;   // Error between speedB (mm/s from encoder) to PWMDTY_B which is currently set motor speed in mm/s
+static signed char errorA;   // Error between speedA (mm/s from encoder) to targetA which is currently set motor speed in mm/s
+static signed char errorB;   // Error between speedB (mm/s from encoder) to targetB which is currently set motor speed in mm/s
+static signed char errorA_I = 0;  // Error for the integral controller
+static signed char errorB_I = 0;  // Error for the integral controller
+static unsigned char PWMDTY_A = 0;      // Duty cycle for Motor A (from 0 - 255)
+static unsigned char PWMDTY_B = 0;      // Duty cycle for Motor B (from 0 - 100)
+static signed int PWMDTY_A_calc = 0;   // Calculated new duty cycle from PI controller
+static signed int PWMDTY_B_calc = 0;   // Calculated new duty cycle from PI controller
+
 
 //;**************************************************************
 //;*                 configureTimer(void)
@@ -220,18 +231,20 @@ interrupt 13 void timer5Handler(void) {
   else {
     // Heartbeat is dead :(
     // Shut er down Fred.
+    DisableInterrupts;
+
     LCDprintf("He's dead Jim!\nHeartbeat fail.");
     
     dcmControl(0, 0, dcmLeft);  //Shut off the left DC motor
     dcmControl(0, 0, dcmRight); //Shut oft the right DC motor
     
-    setServoPosition(180);        //Shut off the servo
-    SET_OC_ACTION(SERVO1,OC_OFF);     // Set TC0 to toggle the port pin.
+    setServoPosition(180);                //Shut off the servo
+    FORCE_OC_ACTION_NOW(SERVO1,OC_GO_LO); // Force pin off
+    SET_OC_ACTION(SERVO1,OC_OFF);         // Set TC0 to not toggle the port pin.
     
     DISABLE_5VA;                //Shut off the secondary power supply    
     
-    DisableInterrupts;
-    for(;;);
+    for(;;);  // Infinite loop of sadness and failure.
   }
 }//end of timer5Handler()
 
@@ -265,11 +278,47 @@ void configureMotorControl(void) {
 //;*  Motor control timer on channel 6
 //;**************************************************************
 interrupt 14 void timer6Handler(void) {
+  DisableInterrupts;
+
+  // Calculate error for each motor.
+  // Positive error = Too fast
+  // Negative error = Too slow
   errorA = speedA - getTargetSpeedA();
   errorB = speedB - getTargetSpeedB();
 
-  writeDAC(abs(errorA), DAC_SET_CTRL_A);
-  writeDAC(abs(errorB), DAC_SET_CTRL_B);
+  // P control calculation
+  PWMDTY_A_calc = gainP * errorA;
+  PWMDTY_B_calc = gainP * errorB;
+
+  // If calculated duty cycle is negative, error is negative
+  if (PWMDTY_A_calc < 0) {
+    PWMDTY_A_calc = abs(PWMDTY_A_calc);
+  }
+
+  if (PWMDTY_B_calc < 0) {
+    PWMDTY_B_calc = abs(PWMDTY_B_calc);
+  }
+
+  // Clip the output to 0-255 (max PWM drive values)
+  if (PWMDTY_A_calc > MAX_DRIVE_PWM) {
+    PWMDTY_A = MAX_DRIVE_PWM;
+  }
+  else {
+    PWMDTY_A = (unsigned char)PWMDTY_A_calc;
+  }
+
+  if (PWMDTY_B_calc > MAX_DRIVE_PWM) {
+    PWMDTY_B = MAX_DRIVE_PWM;
+  }
+  else {
+    PWMDTY_B = (unsigned char)PWMDTY_B_calc;
+  }
+
+  // Set the motor speeds
+  dcmPWM_SET_DUTY_A(PWMDTY_A);  // Set motor A PWM duty cycle
+  dcmPWM_SET_DUTY_B(PWMDTY_B);  // Set motor B PWM duty cycle
 
   TC6 = TCNT + TCNT_30mS;       // Delay 30mS
+
+  EnableInterrupts;
 }//end of timer6Handler()

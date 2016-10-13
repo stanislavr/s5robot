@@ -66,9 +66,15 @@
 #define period_factor 10000000u
 #define period_conversion 73u
 
+// Limits & gain terms for the PI controller
+#define MAX_DRIVE_PWM 255u
+#define MIN_DRIVE_PWM 0u
+//#define gainP 2u
+//#define gainI 2u
+
 // Function prototypes
 void configureDCM(void);	// Configure parameters for DC motor operation
-void dcmControl(unsigned char speed, unsigned char direction, unsigned char motor);	// Function for open-loop control of the motors
-unsigned int speed_mms(unsigned long period);	// Convert period in TCNT ticks to mm/s
+void dcmControl(unsigned char speed, unsigned char direction, unsigned char motor);	// Set the target speed and direction for each motor
+unsigned char speed_mms(unsigned long period);	// Convert period in TCNT ticks to mm/s
 unsigned char getTargetSpeedA(void);			// Returns motor A target speed in mm/s
 unsigned char getTargetSpeedB(void);			// Returns motor B target speed in mm/s

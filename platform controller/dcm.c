@@ -6,8 +6,6 @@
 #include "lcd.h"
 
 // Global variables to control the DC Motors
-unsigned char PWMDTY_A = 0;	// Duty cycle for Motor A (from 0 - 100)
-unsigned char PWMDTY_B = 0;	// Duty cycle for Motor B (from 0 - 100)
 unsigned char targetA = 0;	// Target speed for Motor A in mm/s
 unsigned char targetB = 0;	// Target speed for Motor B in mm/s
 unsigned char dcmA_dir = 0; // Currently set direction for Motor A
@@ -37,8 +35,8 @@ void configureDCM(void) {
 	dcmPWM_CENTRE_ALIGNED;	// Use centre aligned mode for PWM4 and PWM5
 	dcmPWM_SET_PERIOD_A;		// Set period = 100 for PWM4
 	dcmPWM_SET_PERIOD_B;    // Set period = 100 for PWM5
-	dcmPWM_SET_DUTY_A(PWMDTY_A);	// Set duty = 0 to start.
-	dcmPWM_SET_DUTY_B(PWMDTY_B);	// Set duty = 0 to start.
+	dcmPWM_SET_DUTY_A(targetA);	// Set duty = 0 to start.
+	dcmPWM_SET_DUTY_B(targetB);	// Set duty = 0 to start.
 	dcmPWM_CLR_CNT_A;		// Reset counter for PWM4
 	dcmPWM_CLR_CNT_B;		// Reset counter for PWM5
 	dcmPWM_ENABLE;			// Enable the PWM output
@@ -65,7 +63,6 @@ void configureDCM(void) {
 //;**************************************************************  
 void dcmControl(unsigned char speed, unsigned char direction, unsigned char motor) {
 	if(motor == 1) {
-		dcmPWM_SET_DUTY_A(speed);
 		targetA = speed;
 	
 		if(direction != dcmA_dir) {
@@ -89,9 +86,8 @@ void dcmControl(unsigned char speed, unsigned char direction, unsigned char moto
 	} //end of control for left motor
 
 	else {
-		dcmPWM_SET_DUTY_B(speed);
 		targetB = speed;
-		
+
 		if(direction != dcmB_dir) {
 			dcmB_dir = direction;
 			switch(direction) {
@@ -118,8 +114,8 @@ void dcmControl(unsigned char speed, unsigned char direction, unsigned char moto
 //;*                 speed_mms()
 //;*  Return speed in mm/s converted from period in TCNT ticks
 //;**************************************************************
-unsigned int speed_mms(unsigned long period) {
-  static unsigned int speed;
+unsigned char speed_mms(unsigned long period) {
+  static unsigned char speed;
   speed = period_factor / (period * period_conversion);
   return(speed);
 }//end of speed_cms()
