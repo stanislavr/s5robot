@@ -67,8 +67,8 @@
 #define period_conversion 73u
 
 // Limits & gain terms for the PI controller
-#define MAX_DRIVE_PWM 255u
-#define MIN_DRIVE_PWM 0u
+#define MAX_DRIVE_PWM 255
+#define MIN_DRIVE_PWM 0
 //#define gainP 2u
 //#define gainI 2u
 

@@ -284,8 +284,10 @@ interrupt 14 void timer6Handler(void) {
   // Calculate error for each motor.
   // Positive error = Too fast
   // Negative error = Too slow
-  errorA = speedA - getTargetSpeedA();
-  errorB = speedB - getTargetSpeedB();
+  //errorA = speedA - getTargetSpeedA();
+  //errorB = speedB - getTargetSpeedB();
+  errorA = getTargetSpeedA() - speedA;
+  errorB = getTargetSpeedB() - speedB;
 
   // I term update if we aren't on a rail
   if ((PWMDTY_A > MIN_DRIVE_PWM) && (PWMDTY_A < MAX_DRIVE_PWM)) {
@@ -299,8 +301,9 @@ interrupt 14 void timer6Handler(void) {
   // P control calculation
   PWMDTY_A_calc = (gainP * errorA) + (gainI * errorA_I);
   PWMDTY_B_calc = (gainP * errorB) + (gainI * errorB_I);
-
+  
   // If calculated duty cycle is negative, error is negative
+  /*
   if (PWMDTY_A_calc < 0) {
     PWMDTY_A_calc = abs(PWMDTY_A_calc);
   }
@@ -308,10 +311,14 @@ interrupt 14 void timer6Handler(void) {
   if (PWMDTY_B_calc < 0) {
     PWMDTY_B_calc = abs(PWMDTY_B_calc);
   }
+  */
 
   // Clip the output to 0-255 (max PWM drive values)
   if (PWMDTY_A_calc > MAX_DRIVE_PWM) {
     PWMDTY_A = MAX_DRIVE_PWM;
+  }
+  else if (PWMDTY_A_calc < MIN_DRIVE_PWM) {
+    PWMDTY_A = MIN_DRIVE_PWM;
   }
   else {
     PWMDTY_A = (unsigned char)PWMDTY_A_calc;
@@ -319,6 +326,9 @@ interrupt 14 void timer6Handler(void) {
 
   if (PWMDTY_B_calc > MAX_DRIVE_PWM) {
     PWMDTY_B = MAX_DRIVE_PWM;
+  }
+  else if (PWMDTY_B_calc < MIN_DRIVE_PWM) {
+    PWMDTY_B = MIN_DRIVE_PWM;
   }
   else {
     PWMDTY_B = (unsigned char)PWMDTY_B_calc;
