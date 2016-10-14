@@ -230,19 +230,20 @@ interrupt 13 void timer5Handler(void) {
   }
   else {
     // Heartbeat is dead :(
-    // Shut er down Fred.
-    DisableInterrupts;
-
-    LCDprintf("He's dead Jim!\nHeartbeat fail.");
+    // Shut er down Fred.    
+    LCDprintf("Lost heartbeat.\n");
     
     dcmControl(0, 0, dcmLeft);  //Shut off the left DC motor
     dcmControl(0, 0, dcmRight); //Shut oft the right DC motor
-    
-    setServoPosition(180);                //Shut off the servo
-    FORCE_OC_ACTION_NOW(SERVO1,OC_GO_LO); // Force pin off
+        
+    FORCE_OC_ACTION_NOW(SERVO1,OC_GO_LO); // Force pin off    
     SET_OC_ACTION(SERVO1,OC_OFF);         // Set TC0 to not toggle the port pin.
     
     DISABLE_5VA;                //Shut off the secondary power supply    
+    
+    LCDprintf("He's dead Jim!\nLost heartbeat.");
+    
+    DisableInterrupts;
     
     for(;;);  // Infinite loop of sadness and failure.
   }
@@ -286,9 +287,18 @@ interrupt 14 void timer6Handler(void) {
   errorA = speedA - getTargetSpeedA();
   errorB = speedB - getTargetSpeedB();
 
+  // I term update if we aren't on a rail
+  if ((PWMDTY_A > MIN_DRIVE_PWM) && (PWMDTY_A < MAX_DRIVE_PWM)) {
+    errorA_I += errorA;
+  }
+
+  if ((PWMDTY_B > MIN_DRIVE_PWM) && (PWMDTY_B < MAX_DRIVE_PWM)) {
+    errorB_I += errorB;
+  }
+
   // P control calculation
-  PWMDTY_A_calc = gainP * errorA;
-  PWMDTY_B_calc = gainP * errorB;
+  PWMDTY_A_calc = (gainP * errorA) + (gainI * errorA_I);
+  PWMDTY_B_calc = (gainP * errorB) + (gainI * errorB_I);
 
   // If calculated duty cycle is negative, error is negative
   if (PWMDTY_A_calc < 0) {

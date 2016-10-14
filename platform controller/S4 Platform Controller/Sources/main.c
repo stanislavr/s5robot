@@ -13,7 +13,7 @@
 unsigned char greeting[] = "Hello World ";
 
 char speedBuf[3];
-char dirBuf;
+char dirBuf[1];
 unsigned char lSpeed;
 unsigned char lDir;
 unsigned char rSpeed;
@@ -86,9 +86,10 @@ void main(void) {
         }
         
         // Read & check second parameter (left motor direction)
-        dirBuf = consumeSCI();
+        lDir = consumeSCI();        
+        sprintf(dirBuf, "%c", lDir);
         lDir = (char)atoi(&dirBuf);
-        if(!(0 <= lDir <= 2)) {
+        if((lDir > 2) || (lDir < 0)) {         
           putcSCI(NAK); //Invalid direction input
           break;
         }
@@ -99,14 +100,18 @@ void main(void) {
         param3 = consumeSCI();
         sprintf(speedBuf, "%c%c%c", param1, param2, param3);
         rSpeed = (char)atoi(speedBuf);
-        if(!(0 <= rSpeed <= 100)) {
+        if((rDir > 2) || (rDir < 0)) {
           putcSCI(NAK); //Invalid speed input
           break;
         }
         
         // Read & check fourth parameter (right motor direction)
-        dirBuf = consumeSCI();
+        rDir = consumeSCI();
+        sprintf(dirBuf, "%c", rDir);
         rDir = (char)atoi(&dirBuf);
+        
+        //dirBuf = consumeSCI();
+        //rDir = (char)atoi(&dirBuf);
         if(!(0 <= rDir <= 2)) {
           putcSCI(NAK); //Invalid direction input
           break;

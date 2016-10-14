@@ -63,7 +63,7 @@ void configureDCM(void) {
 //;**************************************************************  
 void dcmControl(unsigned char speed, unsigned char direction, unsigned char motor) {
 	if(motor == 1) {
-		targetA = speed;
+		targetA = speed;    
 	
 		if(direction != dcmA_dir) {
 			dcmA_dir = direction;
