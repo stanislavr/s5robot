@@ -46,8 +46,8 @@ static unsigned char hbCount = 0;
 // Error between set speed and recorded speed.
 static signed char errorA;   // Error between speedA (mm/s from encoder) to targetA which is currently set motor speed in mm/s
 static signed char errorB;   // Error between speedB (mm/s from encoder) to targetB which is currently set motor speed in mm/s
-static signed char errorA_I = 0;  // Error for the integral controller
-static signed char errorB_I = 0;  // Error for the integral controller
+static signed long errorA_I = 0;  // Error for the integral controller
+static signed long errorB_I = 0;  // Error for the integral controller
 static unsigned char PWMDTY_A = 0;      // Duty cycle for Motor A (from 0 - 255)
 static unsigned char PWMDTY_B = 0;      // Duty cycle for Motor B (from 0 - 100)
 static signed int PWMDTY_A_calc = 0;   // Calculated new duty cycle from PI controller
@@ -301,17 +301,6 @@ interrupt 14 void timer6Handler(void) {
   // P control calculation
   PWMDTY_A_calc = (gainP * errorA) + (gainI * errorA_I);
   PWMDTY_B_calc = (gainP * errorB) + (gainI * errorB_I);
-  
-  // If calculated duty cycle is negative, error is negative
-  /*
-  if (PWMDTY_A_calc < 0) {
-    PWMDTY_A_calc = abs(PWMDTY_A_calc);
-  }
-
-  if (PWMDTY_B_calc < 0) {
-    PWMDTY_B_calc = abs(PWMDTY_B_calc);
-  }
-  */
 
   // Clip the output to 0-255 (max PWM drive values)
   if (PWMDTY_A_calc > MAX_DRIVE_PWM) {
