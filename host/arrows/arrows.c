@@ -9,6 +9,7 @@ initscr();
 raw();
 keypad(stdscr, TRUE);
 noecho();
+scrollok(stdscr,TRUE); // enable auto-scrolling
 
 printw("Press E to Exit\n");
 
@@ -25,7 +26,7 @@ while((ch = getch()) != 'E')
 					    else
 					    {
 					    	last_ch = ch;
-					    	printw("\n*****timedout");	
+					    	printw("\n***Different Key***");	
     						timeout(-1);	
 					    }
                 break;
@@ -36,7 +37,7 @@ while((ch = getch()) != 'E')
 					    else
 					    {
 					    	last_ch = ch;
-					    	printw("\n*****timedout");	
+					    	printw("\n***Different Key***");
     						timeout(-1);
 					    }
                 break;
@@ -47,7 +48,7 @@ while((ch = getch()) != 'E')
 					    else
 					    {
 					    	last_ch = ch;
-					    	printw("\n*****timedout");	
+					    	printw("\n***Different Key***");
     						timeout(-1);	
 					    }
                 break;
@@ -58,11 +59,11 @@ while((ch = getch()) != 'E')
 					    else
 					    {
 					    	last_ch = ch;
-					    	printw("\n*****timedout");	
+					    	printw("\n***Different Key***");
     						timeout(-1);	
 					    }
                 break;
-    case ERR:			printw("\n$$$$$timedout");	
+    case ERR:			printw("\n$$$Key Released$$$");
     					timeout(-1);
     			break;
     default:    
