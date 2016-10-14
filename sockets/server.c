@@ -1,8 +1,10 @@
 /*
  * server.c
  *
- * This is a sample internet server application that will respond
- * to requests on port 5000
+ * Internet server application that will respond
+ * to requests 
+
+ * credits to Peter Roeser
  */
 
 #include <stdio.h>
@@ -19,7 +21,7 @@
 #include <signal.h>
 #include <sys/wait.h>
 
-#define PORT 5000
+//#define PORT 5000
 
 /*
  * this signal handler is used to catch the termination
@@ -37,7 +39,7 @@ SigCatcher (int n)
 }
 
 int
-main (void)
+main (int argc, char *argv[])
 {
 
 	char buffer[BUFSIZ];	// Data buffer for communications
@@ -47,6 +49,16 @@ main (void)
 	struct sockaddr_in client_addr, server_addr;
 	int len, i;
 	FILE *p;
+ 	char server_port[] = "5000";
+
+	if(argc != 2) {
+		printf ("Argv[1] aka Port number wasn't specified!\n%s will be used!\n", server_port);
+		//return 1;
+		}	/* endif */
+	else {
+			printf ("Port: %s will be used!\n", argv[1]);
+			strcpy(server_port, argv[1]); //replace default ip with given
+		}
 
 
 	/*
@@ -71,9 +83,9 @@ main (void)
 	memset (&server_addr, 0, sizeof (server_addr));
 	server_addr.sin_family = AF_INET;
 	server_addr.sin_addr.s_addr = htonl (INADDR_ANY);
-	printf("%s", INADDR_ANY);
+	//printf("%i", INADDR_ANY);
 
-	server_addr.sin_port = htons (PORT);
+	server_addr.sin_port = htons (atoi(server_port)); // convert string port # into int
 
 	if (bind (server_socket, (struct sockaddr *)&server_addr, 
 	sizeof (server_addr)) < 0) {
@@ -132,6 +144,7 @@ main (void)
 			/*
 			 * process command, and obtain outgoing data
 			 */
+
 
 			if (strcmp (buffer, "date") == 0) {
 				if (len = (p = popen ("date", "r")) != NULL) {
