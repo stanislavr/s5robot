@@ -8,11 +8,12 @@
 #include "stepper.h"
 #include "servo.h"
 #include "dcm.h"
+#include "spi.h"
 
 unsigned char greeting[] = "Hello World ";
 
 char speedBuf[3];
-char dirBuf;
+char dirBuf[2];
 unsigned char lSpeed;
 unsigned char lDir;
 unsigned char rSpeed;
@@ -35,6 +36,9 @@ void main(void) {
   configureDCM();
   configureServo();
   configureHB();
+  configureMotorControl();
+  configureSPI();
+  configureDAC();
   configureSCI();
   configureStepper();  
   
@@ -46,7 +50,7 @@ void main(void) {
   for(;;) {
     switch(consumeSCI()) {
       // If the buffer is empty, nothing to do.
-      case bufEmpty:
+      case bufEmpty:        
         break;
 
       // Case A == Configure all modules
@@ -76,15 +80,16 @@ void main(void) {
         param3 = consumeSCI();
         sprintf(speedBuf, "%c%c%c", param1, param2, param3);
         lSpeed = (char)atoi(speedBuf);
-        if(!(0 <= lSpeed <= 100)) {
+        if(!(0 <= lSpeed <= 255)) {
           putcSCI(NAK); //Invalid speed input
           break;
         }
         
         // Read & check second parameter (left motor direction)
-        dirBuf = consumeSCI();
-        lDir = (char)atoi(&dirBuf);
-        if(!(0 <= lDir <= 2)) {
+        lDir = consumeSCI();        
+        sprintf(dirBuf, "%c", lDir);
+        lDir = (char)atoi(dirBuf);
+        if((lDir > 2) || (lDir < 0)) {         
           putcSCI(NAK); //Invalid direction input
           break;
         }
@@ -95,14 +100,15 @@ void main(void) {
         param3 = consumeSCI();
         sprintf(speedBuf, "%c%c%c", param1, param2, param3);
         rSpeed = (char)atoi(speedBuf);
-        if(!(0 <= rSpeed <= 100)) {
+        if(!(0 <= rSpeed <= 255)) {
           putcSCI(NAK); //Invalid speed input
           break;
         }
         
         // Read & check fourth parameter (right motor direction)
-        dirBuf = consumeSCI();
-        rDir = (char)atoi(&dirBuf);
+        rDir = consumeSCI();
+        sprintf(dirBuf, "%c", rDir);
+        rDir = (char)atoi(dirBuf);
         if(!(0 <= rDir <= 2)) {
           putcSCI(NAK); //Invalid direction input
           break;
