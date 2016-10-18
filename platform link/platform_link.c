@@ -21,87 +21,81 @@
 
 #include "serial.h"
 #include "platform_link.h"
+#include "client_socket.h"
 
 // Global variables
-char serialBuffer[BUFSIZ];	// data buffer for communications
-char socketBuffer[BUFSIZ];
-int client_socket;
-int fdPort;
+int client_socket;				// currently open socket reference
+int serial_port;						// currently open serial port reference
+
+char buffer[BUFSIZ];			// data buffer
+int bRead;						// Number of bytes read
+int bWrite;						// Number of bytes written
 
 int main() {
-	/* SOCKET CODE */
-	//int len;
-	
+		
 	// Set up socket comm.
-	configure_client_socket();	// Error check this later
+	if (configure_client_socket()) {
+		return -1;
+	}
 
 	// Set up serial comm.
-	fdPort = open_port();		// Open the serial port.
-	char fdPortBuf[10] = {0};
-	sprintf(fdPortBuf, "%d", fdPort);
-	configure_port(fdPort);		// Configure port parameters.	
-
-	while(1){
-		bReadSerial = read(fdPort, serialBuffer, sizeof(serialBuffer));
-		if(bReadSerial > 0){
-			//Write to socket
-			write (client_socket, serialBuffer, strlen (serialBuffer));
-		}
-		else if(bReadSerial < 0){
-			// Error
-		}
-		
-		bReadSocket = read(client_socket, buffer, sizeof (buffer));
-		if(bReadSocket > 0){
-			// Write to serial
-			bWrittenSerial = write(fdPort, buffer, strlen(buffer));
-			if (bWritten < strlen(buffer)) {
-				printf("Write failed.\n");
-				return -1;
-			}
-		}
-		else if(bReadSocket < 0){
-			// Error
-		}
-
+	
+	// Open serial port
+	serial_port = open_port();
+	if(serial_port < 0) {
+		return -1;
 	}
-		//write(fdPort, hbCalling, 3);
-		//bRead = read(fdPort, &readBuf, 1);
-    sprintf(cmd1, "<C%03d>", position);
-	if(cmd_send(fdPort,cmd1)) {
+	
+	// Configure the port parameters
+	char serial_portBuf[10] = {0};
+	sprintf(serial_portBuf, "%d", serial_port);
+	if (configure_port(serial_port)) {
+		return -1;
+	}
+
+	// Infinite loop of read/write sweet gateway action
+	while(1){
+
+		// Read serial port
+		bRead = read(serial_port, &buffer, BUFSIZ);
+		if(bRead < 0){
+			perror("Serial read failed.\n");
 			return -1;
 		}
 
+		// Forward serial data to socket if any
+		if(bRead) {
+			// Write the buffer to the socket
+			printf("%s\n", buffer);			
+			bWrite = write(client_socket, &buffer, bRead);
+			if(bWrite < bRead) {
+				perror("Socket write failed.\n");
+				return -1;
+			}
+		}
 
-	close(fdPort);	// Close the serial port
-	printf("Port Closed.\n");
-	return 1;	//return 0 for error (shouldn't get here)
+		
+		// Read socket
+		bRead = read(client_socket, &buffer, BUFSIZ);
+		if(bRead < 0){
+			perror("Socket read failed.\n");
+			return -1;
+		}
+
+		// Forward socket data to serial if any
+		if(bRead) {
+			// Write the buffer to the serial
+			printf("%s\n", buffer);
+			bWrite = write(serial_port, &buffer, bRead);
+			if(bWrite < bRead) {
+				perror("Serial write failed.\n");
+				return -1;
+			}
+		}
+	}// End of infinite while loop
+
+	// If we ever get here, shits fucked up
+	close(serial_port);			// Close the serial port
+	close(client_socket);	// Close the socket
+	printf("SOMETHING IS DEAD\n");
 }
-
-
-
-
-
-	/*
-	 * now that we have a connection, get a commandline from
-	 * the user, and fire it off to the server
-	 */
-
-	printf ("Enter a command [date | who | df ]: ");
-	fflush (stdout);
-	fgets (buffer, sizeof (buffer), stdin);
-	if (buffer[strlen (buffer) - 1] == '\n')
-		buffer[strlen (buffer) - 1] = '\0';
-
-	write (client_socket, buffer, strlen (buffer));
-
-	len = read (client_socket, buffer, sizeof (buffer));
-
-	printf ("Result of command:\n%s\n\n", buffer);
-
-	/*
-	 * cleanup
-	 */
-
-	close (client_socket);
-	printf ("Client is finished\n");
