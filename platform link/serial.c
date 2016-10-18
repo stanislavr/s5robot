@@ -17,7 +17,6 @@
 #include <termios.h>
 
  #include "serial.h"
- #include "platform_supervisor.h"
 
 /*
  * open_port()
@@ -43,7 +42,7 @@
  *	Inputs: File descriptor for the port to be configured
  *	Outputs: None, errors if it fails
  */
-void configure_port(int port) {
+int configure_port(int port) {
 	struct termios tty;	
 	memset (&tty, 0, sizeof tty);
 
@@ -73,45 +72,4 @@ void configure_port(int port) {
    		return -1;
 	}
 	return 0;
-}
-
-
-/*
- * cmd_send()
- *
- *	Inputs: 
- * 			buffer: Buffer of data which is the command to be send
- *			port_serial: file descriptor for the port to write to
- *	Outputs: Non-zero for failure
- */
-int cmd_send(int port, char* buffer) {
-	char NAK = 0x49;	// Negative ack from robot
-	int bWritten = 0;	// Bytes written to serial port
-	int bRead = 0;		// Bytes read from serial port
-	char RxBuf[2] = {0};	// Buffer for Rx data (should be ack or nak + cmd)
-
-	// Send SIGUSR1 to Heartbeat proccess to tell it to shut up for a bit
-	kill(heartbeatPid, sigUItoHB);	// Send signal to HB process to toggle comms
-
-	bWritten = write(port, buffer, strlen(buffer));
-	if (bWritten < strlen(buffer)) {
-		printf("Write failed.\n");
-		return -1;
-	}
-
-	bRead = read(port, &RxBuf, sizeof(RxBuf));
-	if(bRead == 0) {
-		printf("No response from robot.\n");
-		return -1;
-	}
-
-	if(RxBuf[0] == NAK) {
-		printf("Invalid command received by robot.\n");
-		return -1;
-	}
-
-	// Send SIGUSR1 to Heartbeat process to tell it to start talking again
-	kill(heartbeatPid, sigUItoHB);	// Send signal to HB process to toggle comms
-
-	return 0;	//Successful command.
 }

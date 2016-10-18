@@ -19,10 +19,11 @@
 #include <arpa/inet.h>
 #include <netdb.h>
 #include <errno.h>
+#include "client_socket.h"
 
 int configure_client_socket(){
 	int addr;
-	struct server_addr;
+	struct sockaddr_in server_addr;
 
 	addr = inet_addr(server_ip); //convert given ip into int format
 

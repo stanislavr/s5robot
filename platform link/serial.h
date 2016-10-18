@@ -11,5 +11,5 @@
 #define port_serial "/dev/ttyUSB0"	// Port to use for RS232
 
 int open_port();				// Open the serial port.
-void configure_port(int port);	// Configure a serial port.
+int configure_port(int port);	// Configure a serial port.
 int cmd_send(int port, char* buffer);		// Send a command to the robot over serial.

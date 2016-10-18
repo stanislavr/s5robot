@@ -7,9 +7,8 @@
  *      References: 
  */
 
-#include <stdio.h>
-
-#define server_ip = "169.254.168.174"	// Static IP address of platform supervisor - linux VM on school desktop
-#define server_port = "5000"			// Port for socket comms
+#define server_ip "169.254.168.174"	// Static IP address of platform supervisor - linux VM on school desktop
+#define server_port "5000"			// Port for socket comms
 
 extern int client_socket;
+int configure_client_socket();
