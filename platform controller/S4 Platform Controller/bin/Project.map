@@ -1,5 +1,5 @@
 *** EVALUATION ***
-PROGRAM "G:\Semester_5\GitHub\s5robot\platform controller\S4 Platform Controller\bin\Project.abs"
+PROGRAM "C:\Users\tabdallah1518\Desktop\GitHub\s5robot\platform controller\S4 Platform Controller\bin\Project.abs"
 
 *********************************************************************************************
 TARGET SECTION
@@ -35,8 +35,8 @@ Entry point: 0xC029 (_Startup)
 _startupData is allocated at 0xC031 and uses 6 Bytes
 extern struct _tagStartup {
   unsigned nofZeroOut     1
-  _Range   pZeroOut       0x900     240
-  _Copy    *toCopyDownBeg 0xD490
+  _Range   pZeroOut       0x900     241
+  _Copy    *toCopyDownBeg 0xD4AC
 } _startupData;
 
 *********************************************************************************************
@@ -47,8 +47,8 @@ Section Name                    Size  Type     From       To       Segment
 .startData                        10     R     0xC031     0xC03A   ROM_C000
 .rodata                          116     R     0xC03B     0xC0AE   ROM_C000
 .rodata1                         414     R     0xC0AF     0xC24C   ROM_C000
-.text                           4310     R     0xC24D     0xD322   ROM_C000
-.copy                             18     R     0xD490     0xD4A1   ROM_C000
+.text                           4338     R     0xC24D     0xD33E   ROM_C000
+.copy                             18     R     0xD4AC     0xD4BD   ROM_C000
 .stack                           256   R/W      0x800      0x8FF   RAM
 .data                             12   R/W      0x900      0x90B   RAM
 .abs_section_8                     1   N/I        0x8        0x8   .absSeg0
@@ -281,14 +281,14 @@ Section Name                    Size  Type     From       To       Segment
 .abs_section_ffde                  2     R     0xFFDE     0xFFDF   .absSeg227
 .abs_section_ffe4                  2     R     0xFFE4     0xFFE5   .absSeg228
 .abs_section_ffe2                  2     R     0xFFE2     0xFFE3   .absSeg229
-.bss                             213   R/W      0x90C      0x9E0   RAM
-.common                           15   R/W      0x9E1      0x9EF   RAM
-RUNTIME                          365     R     0xD323     0xD48F   ROM_C000
+.bss                             214   R/W      0x90C      0x9E1   RAM
+.common                           15   R/W      0x9E2      0x9F0   RAM
+RUNTIME                          365     R     0xD33F     0xD4AB   ROM_C000
 .vectSeg230_vect                   2     R     0xFFFE     0xFFFF   .vectSeg230
 
 Summary of section sizes per section type:
-READ_ONLY (R):        14B6 (dec:     5302)
-READ_WRITE (R/W):      1F0 (dec:      496)
+READ_ONLY (R):        14D2 (dec:     5330)
+READ_WRITE (R/W):      1F1 (dec:      497)
 NO_INIT (N/I):         104 (dec:      260)
 
 *********************************************************************************************
@@ -619,39 +619,41 @@ MODULE:                 -- timer.c.o --
      timer1Handler                             C793      6A     106       1   .text       
      timerOverflowHandler                      C7FD       6       6       1   .text       
      configureHB                               C803      11      17       1   .text       
-     timer5Handler                             C814      4A      74       1   .text       
-     setHBtimer                                C85E       8       8       2   .text       
-     configureMotorControl                     C866      11      17       1   .text       
-     timer6Handler                             C877      D1     209       1   .text       
+     timer5Handler                             C814      54      84       1   .text       
+     setHBtimer                                C868      12      18       2   .text       
+     set_hb_alarm_state                        C87A       8       8       1   .text       
+     configureMotorControl                     C882      11      17       1   .text       
+     timer6Handler                             C893      D1     209       1   .text       
 - VARIABLES:
      STRING.Lost.heartbeat...3                 C16D      11      17       1   .rodata1    
      STRING.He.s.dead.Jim..Lost..4             C17E      1F      31       1   .rodata1    
      gainP                                      90A       1       1       1   .data       
      gainI                                      90B       1       1       1   .data       
-     periodAstart                               9A8       1       1       3   .bss        
-     periodBstart                               9A9       1       1       3   .bss        
-     overflowCount                              9AA       1       1       5   .bss        
-     hbCount                                    9AB       1       1       3   .bss        
-     errorA_I                                   9AC       4       4       6   .bss        
-     errorB_I                                   9B0       4       4       6   .bss        
-     PWMDTY_A                                   9B4       1       1       4   .bss        
-     PWMDTY_B                                   9B5       1       1       4   .bss        
-     PWMDTY_A_calc                              9B6       2       2       4   .bss        
-     PWMDTY_B_calc                              9B8       2       2       3   .bss        
-     edgeA1                                     9BA       4       4       5   .bss        
-     edgeA2                                     9BE       4       4       3   .bss        
-     edgeA1ovf                                  9C2       1       1       2   .bss        
-     edgeA2ovf                                  9C3       1       1       1   .bss        
-     periodA                                    9C4       4       4       2   .bss        
-     speedA                                     9C8       1       1       2   .bss        
-     edgeB1                                     9C9       4       4       5   .bss        
-     edgeB2                                     9CD       4       4       3   .bss        
-     edgeB1ovf                                  9D1       1       1       2   .bss        
-     edgeB2ovf                                  9D2       1       1       1   .bss        
-     periodB                                    9D3       4       4       2   .bss        
-     speedB                                     9D7       1       1       2   .bss        
-     errorA                                     9D8       1       1       3   .bss        
-     errorB                                     9D9       1       1       3   .bss        
+     hb_alarm_state                             9A8       1       1       3   .bss        
+     periodAstart                               9A9       1       1       3   .bss        
+     periodBstart                               9AA       1       1       3   .bss        
+     overflowCount                              9AB       1       1       5   .bss        
+     hbCount                                    9AC       1       1       4   .bss        
+     errorA_I                                   9AD       4       4       6   .bss        
+     errorB_I                                   9B1       4       4       6   .bss        
+     PWMDTY_A                                   9B5       1       1       4   .bss        
+     PWMDTY_B                                   9B6       1       1       4   .bss        
+     PWMDTY_A_calc                              9B7       2       2       4   .bss        
+     PWMDTY_B_calc                              9B9       2       2       3   .bss        
+     edgeA1                                     9BB       4       4       5   .bss        
+     edgeA2                                     9BF       4       4       3   .bss        
+     edgeA1ovf                                  9C3       1       1       2   .bss        
+     edgeA2ovf                                  9C4       1       1       1   .bss        
+     periodA                                    9C5       4       4       2   .bss        
+     speedA                                     9C9       1       1       2   .bss        
+     edgeB1                                     9CA       4       4       5   .bss        
+     edgeB2                                     9CE       4       4       3   .bss        
+     edgeB1ovf                                  9D2       1       1       2   .bss        
+     edgeB2ovf                                  9D3       1       1       1   .bss        
+     periodB                                    9D4       4       4       2   .bss        
+     speedB                                     9D8       1       1       2   .bss        
+     errorA                                     9D9       1       1       3   .bss        
+     errorB                                     9DA       1       1       3   .bss        
      _Vector_8                                 FFEE       2       2       0   .abs_section_ffee
      _Vector_9                                 FFEC       2       2       0   .abs_section_ffec
      _Vector_16                                FFDE       2       2       0   .abs_section_ffde
@@ -659,7 +661,7 @@ MODULE:                 -- timer.c.o --
      _Vector_14                                FFE2       2       2       0   .abs_section_ffe2
 MODULE:                 -- main.c.o --
 - PROCEDURES:
-     main                                      C948     1FE     510      17   .text       
+     main                                      C964     1FE     510      17   .text       
 - VARIABLES:
      STRING.Hello.World.2                      C19D       C      12       1   .rodata1    
      STRING.Go.home.Camera..3                  C1A9      10      16       1   .rodata1    
@@ -674,16 +676,16 @@ MODULE:                 -- main.c.o --
      STRING..c.c.c.12                          C228       7       7       1   .rodata1    
      STRING.Processing.camera.ti.13            C22F      17      23       1   .rodata1    
      STRING..c.c.c.14                          C246       7       7       1   .rodata1    
-     speedBuf                                   9E1       3       3       5   .common     
-     dirBuf                                     9E4       2       2       3   .common     
-     lSpeed                                     9E6       1       1       3   .common     
-     lDir                                       9E7       1       1       4   .common     
-     rSpeed                                     9E8       1       1       3   .common     
-     rDir                                       9E9       1       1       4   .common     
-     camPos                                     9EA       1       1       4   .common     
-     param1                                     9EB       1       1       5   .common     
-     param2                                     9EC       1       1       5   .common     
-     param3                                     9ED       1       1       2   .common     
+     speedBuf                                   9E2       3       3       5   .common     
+     dirBuf                                     9E5       2       2       3   .common     
+     lSpeed                                     9E7       1       1       3   .common     
+     lDir                                       9E8       1       1       4   .common     
+     rSpeed                                     9E9       1       1       3   .common     
+     rDir                                       9EA       1       1       4   .common     
+     camPos                                     9EB       1       1       4   .common     
+     param1                                     9EC       1       1       5   .common     
+     param2                                     9ED       1       1       5   .common     
+     param3                                     9EE       1       1       2   .common     
 MODULE:                 -- Start12.c.o --
 - PROCEDURES:
      Init                                      C000      29      41       1   .init       
@@ -694,51 +696,51 @@ MODULE:                 -- Start12.c.o --
      __SEG_END_SSTACK                           900       0       0       1               
 MODULE:                 -- CTYPE.C.o (ansisi.lib) --
 - PROCEDURES:
-     isdigit                                   CB46       E      14       1   .text       
-     isspace                                   CB54      17      23       2   .text       
-     toupper                                   CB6B      14      20       3   .text       
+     isdigit                                   CB62       E      14       1   .text       
+     isspace                                   CB70      17      23       2   .text       
+     toupper                                   CB87      14      20       3   .text       
 - VARIABLES:
 MODULE:                 -- PRINTF.C.o (ansisi.lib) --
 - PROCEDURES:
-     vprintf                                   CB7F     478    1144      50   .text       
-     _out                                      CFF7       C      12       9   .text       
-     deposit_char                              D003       F      15       2   .text       
-     sprintf                                   D012      29      41       6   .text       
-     vsprintf                                  D03B      29      41       1   .text       
+     vprintf                                   CB9B     478    1144      50   .text       
+     _out                                      D013       C      12       9   .text       
+     deposit_char                              D01F       F      15       2   .text       
+     sprintf                                   D02E      29      41       6   .text       
+     vsprintf                                  D057      29      41       1   .text       
 - VARIABLES:
      pow10                                     C03B      28      40       4   .rodata     
      pow16                                     C063      20      32       4   .rodata     
      pow8                                      C083      2C      44       4   .rodata     
-     pbuf                                       9DA       6       6      21   .bss        
+     pbuf                                       9DB       6       6      21   .bss        
 MODULE:                 -- STDLIB.C.o (ansisi.lib) --
 - PROCEDURES:
-     CheckCharWithBase                         D064      39      57       1   .text       
-     _strtoul                                  D09D     170     368       8   .text       
-     _strtol                                   D20D      D0     208       3   .text       
-     strtol                                    D2DD      13      19       2   .text       
+     CheckCharWithBase                         D080      39      57       1   .text       
+     _strtoul                                  D0B9     170     368       8   .text       
+     _strtol                                   D229      D0     208       3   .text       
+     strtol                                    D2F9      13      19       2   .text       
 - VARIABLES:
 MODULE:                 -- rtshc12.c.o (ansisi.lib) --
 - PROCEDURES:
-     _LCMP_P                                   D323      15      21       4   RUNTIME     
-     _LNEG                                     D338       D      13       3   RUNTIME     
-     _LMULU16x32                               D345       F      15       1   RUNTIME     
-     _LMULS16x32                               D354      1F      31       1   RUNTIME     
-     _lDivMod                                  D373      BE     190       1   RUNTIME     
-     _LDIVU                                    D431       E      14       2   RUNTIME     
-     _ILSEXT                                   D43F       7       7       6   RUNTIME     
-     _CASE_DIRECT_BYTE                         D446       5       5       1   RUNTIME     
-     _CASE_CHECKED_BYTE                        D44B      14      20       2   RUNTIME     
-     _CASE_SEARCH_8                            D45F      17      23       1   RUNTIME     
-     _CASE_SEARCH_8_BYTE                       D476      1A      26       1   RUNTIME     
+     _LCMP_P                                   D33F      15      21       4   RUNTIME     
+     _LNEG                                     D354       D      13       3   RUNTIME     
+     _LMULU16x32                               D361       F      15       1   RUNTIME     
+     _LMULS16x32                               D370      1F      31       1   RUNTIME     
+     _lDivMod                                  D38F      BE     190       1   RUNTIME     
+     _LDIVU                                    D44D       E      14       2   RUNTIME     
+     _ILSEXT                                   D45B       7       7       6   RUNTIME     
+     _CASE_DIRECT_BYTE                         D462       5       5       1   RUNTIME     
+     _CASE_CHECKED_BYTE                        D467      14      20       2   RUNTIME     
+     _CASE_SEARCH_8                            D47B      17      23       1   RUNTIME     
+     _CASE_SEARCH_8_BYTE                       D492      1A      26       1   RUNTIME     
 - VARIABLES:
-     errno                                      9EE       2       2       2   .common     
+     errno                                      9EF       2       2       2   .common     
 MODULE:                 -- spi.c.o --
 - PROCEDURES:
-     configureSPI                              D2F0       F      15       1   .text       
-     putcSPI                                   D2FF      14      20       2   .text       
-     configureDAC                              D313      10      16       1   .text       
+     configureSPI                              D30C       F      15       1   .text       
+     putcSPI                                   D31B      14      20       2   .text       
+     configureDAC                              D32F      10      16       1   .text       
 - VARIABLES:
-     temp.1                                     9E0       1       1       1   .bss        
+     temp.1                                     9E1       1       1       1   .bss        
 
 *********************************************************************************************
 MODULE STATISTIC
@@ -751,7 +753,7 @@ MODULE STATISTIC
   servo.c.o                                    5    129     47
   sci.c.o                                     26    172     38
   stepper.c.o                                 28    352     66
-  timer.c.o                                   52    594     58
+  timer.c.o                                   53    622     58
   main.c.o                                    13    510    176
   Start12.c.o                                  0     49      0
   CTYPE.C.o (ansisi.lib)                       0     57      0
@@ -770,7 +772,7 @@ SECTION: ".text"
   setServoPosition configureSCI putcSCI sciHandler consumeSCI timer4handler 
   setStepperSpeed homeStepper configureStepper moveStepper getStepperPosition 
   setStepperPos configureTimer msDelay timer0Handler timer1Handler 
-  timerOverflowHandler configureHB timer5Handler setHBtimer 
+  timerOverflowHandler configureHB timer5Handler setHBtimer set_hb_alarm_state 
   configureMotorControl timer6Handler main isdigit isspace toupper vprintf _out 
   deposit_char sprintf vsprintf CheckCharWithBase _strtoul _strtol strtol 
   configureSPI putcSPI configureDAC 
@@ -780,10 +782,11 @@ SECTION: ".bss"
   analogIn analogCount analogBuf targetA targetB dcmA_dir dcmB_dir speed.3 
   servoOnTicks servoEdge servoLastOnTicks sciIn sciOut sciCount msgStatus.2 
   sciBuf garbage.3 tmpRead.5 tableIndex stepTime stepRange deg2steps stepsTaken 
-  stepperPos stepMode position.3 startPos.5 endPos.6 periodAstart periodBstart 
-  overflowCount hbCount errorA_I errorB_I PWMDTY_A PWMDTY_B PWMDTY_A_calc 
-  PWMDTY_B_calc edgeA1 edgeA2 edgeA1ovf edgeA2ovf periodA speedA edgeB1 edgeB2 
-  edgeB1ovf edgeB2ovf periodB speedB errorA errorB pbuf temp.1 
+  stepperPos stepMode position.3 startPos.5 endPos.6 hb_alarm_state 
+  periodAstart periodBstart overflowCount hbCount errorA_I errorB_I PWMDTY_A 
+  PWMDTY_B PWMDTY_A_calc PWMDTY_B_calc edgeA1 edgeA2 edgeA1ovf edgeA2ovf 
+  periodA speedA edgeB1 edgeB2 edgeB1ovf edgeB2ovf periodB speedB errorA errorB 
+  pbuf temp.1 
 SECTION: ".init"
   Init _Startup 
 SECTION: ".rodata"
@@ -1522,43 +1525,44 @@ OBJECT LIST SORTED BY ADDRESS
      position.3                                 9A2       2       2       1   .bss        
      startPos.5                                 9A4       2       2       4   .bss        
      endPos.6                                   9A6       2       2       2   .bss        
-     periodAstart                               9A8       1       1       3   .bss        
-     periodBstart                               9A9       1       1       3   .bss        
-     overflowCount                              9AA       1       1       5   .bss        
-     hbCount                                    9AB       1       1       3   .bss        
-     errorA_I                                   9AC       4       4       6   .bss        
-     errorB_I                                   9B0       4       4       6   .bss        
-     PWMDTY_A                                   9B4       1       1       4   .bss        
-     PWMDTY_B                                   9B5       1       1       4   .bss        
-     PWMDTY_A_calc                              9B6       2       2       4   .bss        
-     PWMDTY_B_calc                              9B8       2       2       3   .bss        
-     edgeA1                                     9BA       4       4       5   .bss        
-     edgeA2                                     9BE       4       4       3   .bss        
-     edgeA1ovf                                  9C2       1       1       2   .bss        
-     edgeA2ovf                                  9C3       1       1       1   .bss        
-     periodA                                    9C4       4       4       2   .bss        
-     speedA                                     9C8       1       1       2   .bss        
-     edgeB1                                     9C9       4       4       5   .bss        
-     edgeB2                                     9CD       4       4       3   .bss        
-     edgeB1ovf                                  9D1       1       1       2   .bss        
-     edgeB2ovf                                  9D2       1       1       1   .bss        
-     periodB                                    9D3       4       4       2   .bss        
-     speedB                                     9D7       1       1       2   .bss        
-     errorA                                     9D8       1       1       3   .bss        
-     errorB                                     9D9       1       1       3   .bss        
-     pbuf                                       9DA       6       6      21   .bss        
-     temp.1                                     9E0       1       1       1   .bss        
-     speedBuf                                   9E1       3       3       5   .common     
-     dirBuf                                     9E4       2       2       3   .common     
-     lSpeed                                     9E6       1       1       3   .common     
-     lDir                                       9E7       1       1       4   .common     
-     rSpeed                                     9E8       1       1       3   .common     
-     rDir                                       9E9       1       1       4   .common     
-     camPos                                     9EA       1       1       4   .common     
-     param1                                     9EB       1       1       5   .common     
-     param2                                     9EC       1       1       5   .common     
-     param3                                     9ED       1       1       2   .common     
-     errno                                      9EE       2       2       2   .common     
+     hb_alarm_state                             9A8       1       1       3   .bss        
+     periodAstart                               9A9       1       1       3   .bss        
+     periodBstart                               9AA       1       1       3   .bss        
+     overflowCount                              9AB       1       1       5   .bss        
+     hbCount                                    9AC       1       1       4   .bss        
+     errorA_I                                   9AD       4       4       6   .bss        
+     errorB_I                                   9B1       4       4       6   .bss        
+     PWMDTY_A                                   9B5       1       1       4   .bss        
+     PWMDTY_B                                   9B6       1       1       4   .bss        
+     PWMDTY_A_calc                              9B7       2       2       4   .bss        
+     PWMDTY_B_calc                              9B9       2       2       3   .bss        
+     edgeA1                                     9BB       4       4       5   .bss        
+     edgeA2                                     9BF       4       4       3   .bss        
+     edgeA1ovf                                  9C3       1       1       2   .bss        
+     edgeA2ovf                                  9C4       1       1       1   .bss        
+     periodA                                    9C5       4       4       2   .bss        
+     speedA                                     9C9       1       1       2   .bss        
+     edgeB1                                     9CA       4       4       5   .bss        
+     edgeB2                                     9CE       4       4       3   .bss        
+     edgeB1ovf                                  9D2       1       1       2   .bss        
+     edgeB2ovf                                  9D3       1       1       1   .bss        
+     periodB                                    9D4       4       4       2   .bss        
+     speedB                                     9D8       1       1       2   .bss        
+     errorA                                     9D9       1       1       3   .bss        
+     errorB                                     9DA       1       1       3   .bss        
+     pbuf                                       9DB       6       6      21   .bss        
+     temp.1                                     9E1       1       1       1   .bss        
+     speedBuf                                   9E2       3       3       5   .common     
+     dirBuf                                     9E5       2       2       3   .common     
+     lSpeed                                     9E7       1       1       3   .common     
+     lDir                                       9E8       1       1       4   .common     
+     rSpeed                                     9E9       1       1       3   .common     
+     rDir                                       9EA       1       1       4   .common     
+     camPos                                     9EB       1       1       4   .common     
+     param1                                     9EC       1       1       5   .common     
+     param2                                     9ED       1       1       5   .common     
+     param3                                     9EE       1       1       2   .common     
+     errno                                      9EF       2       2       2   .common     
      Init                                      C000      29      41       1   .init       
      _Startup                                  C029       8       8       0   .init       
      pow10                                     C03B      28      40       4   .rodata     
@@ -1619,37 +1623,38 @@ OBJECT LIST SORTED BY ADDRESS
      timer1Handler                             C793      6A     106       1   .text       
      timerOverflowHandler                      C7FD       6       6       1   .text       
      configureHB                               C803      11      17       1   .text       
-     timer5Handler                             C814      4A      74       1   .text       
-     setHBtimer                                C85E       8       8       2   .text       
-     configureMotorControl                     C866      11      17       1   .text       
-     timer6Handler                             C877      D1     209       1   .text       
-     main                                      C948     1FE     510      17   .text       
-     isdigit                                   CB46       E      14       1   .text       
-     isspace                                   CB54      17      23       2   .text       
-     toupper                                   CB6B      14      20       3   .text       
-     vprintf                                   CB7F     478    1144      50   .text       
-     _out                                      CFF7       C      12       9   .text       
-     deposit_char                              D003       F      15       2   .text       
-     sprintf                                   D012      29      41       6   .text       
-     vsprintf                                  D03B      29      41       1   .text       
-     CheckCharWithBase                         D064      39      57       1   .text       
-     _strtoul                                  D09D     170     368       8   .text       
-     _strtol                                   D20D      D0     208       3   .text       
-     strtol                                    D2DD      13      19       2   .text       
-     configureSPI                              D2F0       F      15       1   .text       
-     putcSPI                                   D2FF      14      20       2   .text       
-     configureDAC                              D313      10      16       1   .text       
-     _LCMP_P                                   D323      15      21       4   RUNTIME     
-     _LNEG                                     D338       D      13       3   RUNTIME     
-     _LMULU16x32                               D345       F      15       1   RUNTIME     
-     _LMULS16x32                               D354      1F      31       1   RUNTIME     
-     _lDivMod                                  D373      BE     190       1   RUNTIME     
-     _LDIVU                                    D431       E      14       2   RUNTIME     
-     _ILSEXT                                   D43F       7       7       6   RUNTIME     
-     _CASE_DIRECT_BYTE                         D446       5       5       1   RUNTIME     
-     _CASE_CHECKED_BYTE                        D44B      14      20       2   RUNTIME     
-     _CASE_SEARCH_8                            D45F      17      23       1   RUNTIME     
-     _CASE_SEARCH_8_BYTE                       D476      1A      26       1   RUNTIME     
+     timer5Handler                             C814      54      84       1   .text       
+     setHBtimer                                C868      12      18       2   .text       
+     set_hb_alarm_state                        C87A       8       8       1   .text       
+     configureMotorControl                     C882      11      17       1   .text       
+     timer6Handler                             C893      D1     209       1   .text       
+     main                                      C964     1FE     510      17   .text       
+     isdigit                                   CB62       E      14       1   .text       
+     isspace                                   CB70      17      23       2   .text       
+     toupper                                   CB87      14      20       3   .text       
+     vprintf                                   CB9B     478    1144      50   .text       
+     _out                                      D013       C      12       9   .text       
+     deposit_char                              D01F       F      15       2   .text       
+     sprintf                                   D02E      29      41       6   .text       
+     vsprintf                                  D057      29      41       1   .text       
+     CheckCharWithBase                         D080      39      57       1   .text       
+     _strtoul                                  D0B9     170     368       8   .text       
+     _strtol                                   D229      D0     208       3   .text       
+     strtol                                    D2F9      13      19       2   .text       
+     configureSPI                              D30C       F      15       1   .text       
+     putcSPI                                   D31B      14      20       2   .text       
+     configureDAC                              D32F      10      16       1   .text       
+     _LCMP_P                                   D33F      15      21       4   RUNTIME     
+     _LNEG                                     D354       D      13       3   RUNTIME     
+     _LMULU16x32                               D361       F      15       1   RUNTIME     
+     _LMULS16x32                               D370      1F      31       1   RUNTIME     
+     _lDivMod                                  D38F      BE     190       1   RUNTIME     
+     _LDIVU                                    D44D       E      14       2   RUNTIME     
+     _ILSEXT                                   D45B       7       7       6   RUNTIME     
+     _CASE_DIRECT_BYTE                         D462       5       5       1   RUNTIME     
+     _CASE_CHECKED_BYTE                        D467      14      20       2   RUNTIME     
+     _CASE_SEARCH_8                            D47B      17      23       1   RUNTIME     
+     _CASE_SEARCH_8_BYTE                       D492      1A      26       1   RUNTIME     
      _Vector_22                                FFD2       2       2       0   .abs_section_ffd2
      _Vector_20                                FFD6       2       2       0   .abs_section_ffd6
      _Vector_16                                FFDE       2       2       0   .abs_section_ffde
@@ -1709,22 +1714,22 @@ rtshc12.c.o (ansisi.lib):
 *********************************************************************************************
 COPYDOWN SECTION
 ---------------------------------------------------------------------------------------------
-------- ROM-ADDRESS: 0xD490 ---- SIZE       4 ---
+------- ROM-ADDRESS: 0xD4AC ---- SIZE       4 ---
 Filling bytes inserted
  000C0900
-------- ROM-ADDRESS: 0xD494 ---- RAM-ADDRESS: 0x900 ---- SIZE       8 ---
+------- ROM-ADDRESS: 0xD4B0 ---- RAM-ADDRESS: 0x900 ---- SIZE       8 ---
 Name of initialized Object : pTable
  80A0206040 501090
-------- ROM-ADDRESS: 0xD49C ---- RAM-ADDRESS: 0x908 ---- SIZE       2 ---
+------- ROM-ADDRESS: 0xD4B8 ---- RAM-ADDRESS: 0x908 ---- SIZE       2 ---
 Name of initialized Object : steps2move
  FFFF
-------- ROM-ADDRESS: 0xD49E ---- RAM-ADDRESS: 0x90A ---- SIZE       1 ---
+------- ROM-ADDRESS: 0xD4BA ---- RAM-ADDRESS: 0x90A ---- SIZE       1 ---
 Name of initialized Object : gainP
  02
-------- ROM-ADDRESS: 0xD49F ---- RAM-ADDRESS: 0x90B ---- SIZE       1 ---
+------- ROM-ADDRESS: 0xD4BB ---- RAM-ADDRESS: 0x90B ---- SIZE       1 ---
 Name of initialized Object : gainI
  02
-------- ROM-ADDRESS: 0xD4A0 ---- SIZE       2 ---
+------- ROM-ADDRESS: 0xD4BC ---- SIZE       2 ---
 Filling bytes inserted
  0000
 
@@ -1785,10 +1790,11 @@ timer1Handler             USES periodBstart _TC1 edgeB1 overflowCount
                                 speedB 
 timerOverflowHandler      USES overflowCount _TCNT 
 configureHB               USES _TIOS _TCTL1 _TCNT _TC5 _TIE 
-timer5Handler             USES hbCount _TC5 STRING.Lost.heartbeat...3 
-                                LCDprintf dcmControl _TCTL1 _CFORC _PORTAB 
+timer5Handler             USES hb_alarm_state hbCount _TC5 
+                                STRING.Lost.heartbeat...3 LCDprintf dcmControl _TCTL1 _CFORC _PORTAB 
                                 STRING.He.s.dead.Jim..Lost..4 
-setHBtimer                USES hbCount 
+setHBtimer                USES hbCount hb_alarm_state set_hb_alarm_state 
+set_hb_alarm_state        USES hb_alarm_state 
 configureMotorControl     USES _TIOS _TCTL1 _TCNT _TC6 _TIE 
 timer6Handler             USES getTargetSpeedA speedA errorA getTargetSpeedB 
                                 speedB errorB PWMDTY_A errorA_I PWMDTY_B errorB_I 
@@ -1934,7 +1940,9 @@ DEPENDENCY TREE
  |  |  +- _CASE_CHECKED_BYTE  
  |  |       
  |  +- setHBtimer          
- |  |    
+ |  |  | 
+ |  |  +- set_hb_alarm_state  
+ |  |       
  |  +- setStepperPos       
  |  |  | 
  |  |  +- LCDprintf            (see above)
@@ -2052,5 +2060,5 @@ STATISTIC SECTION
 ExeFile:
 --------
 Number of blocks to be downloaded: 16
-Total size of all blocks to be downloaded: 5302
+Total size of all blocks to be downloaded: 5330
 

@@ -7,6 +7,9 @@
 #include "dcm.h"
 #include "spi.h"
 
+// Global variable to enable or disable the heartbeat alarm clock
+unsigned char hb_alarm_state = 0;  // 0 = disabled, 1 = enabled.
+
 // Temporary global variables to allow for tuning of gains
 unsigned char gainP = 2;
 unsigned char gainI = 2;
@@ -223,7 +226,12 @@ void configureHB(void) {
 //;*  Heartbeat alarm clock on timer channel 5
 //;**************************************************************
 interrupt 13 void timer5Handler(void) {
-  // If less than 1.2 seconds, all okay.
+  // If heartbeat alarm clock is disabled, just pretend we got one MmmmmmKayyyyy
+  if(hb_alarm_state == 0) {
+    hbCount = 0;
+  }
+  
+  // If less than 1.8 seconds, all okay.
   if(hbCount < hbLimit) {
     TC5 += TCNT_30mS; // Delay 30mS  
     hbCount ++;
@@ -257,6 +265,24 @@ interrupt 13 void timer5Handler(void) {
 void setHBtimer(void) {
   DisableInterrupts;
   hbCount = 0;
+  EnableInterrupts;
+  
+  if(hb_alarm_state == 0) {
+    set_hb_alarm_state(1);
+  }    
+  
+}
+
+
+//;**************************************************************
+//;*                 set_hb_alarm_state(unsigned char state)
+//;*  Set the state of the hb alarm clock
+//;*  state 0 = alarm clock off
+//;*  state 1 = alarm clock on
+//;**************************************************************
+void set_hb_alarm_state(unsigned char state) {
+  DisableInterrupts;
+  hb_alarm_state = state;
   EnableInterrupts;
 }
 

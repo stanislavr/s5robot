@@ -86,8 +86,8 @@ interrupt 20 void sciHandler(void) {
 
 			if(SCIDRL == HB) {
 	    	TOGGLE_LEDS;
-        	putcSCI(HB);
-        	setHBtimer(); // Delay the heartbeat timer again.
+        putcSCI(HB);
+        setHBtimer(); // Delay the heartbeat timer again.        	
 			}
 			else {
 				sciBuf[sciIn] = SCIDRL;	// Add the reading to the buffer

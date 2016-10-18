@@ -36,7 +36,7 @@
 #define periodBufSz 50u     // Number of elements for period ring buffer
 
 // Heartbeat constants
-#define hbLimit 40			// For a 1.2s delay, 1200mS / 30mS = 40, so 40 interrupts before alarm triggered for real 
+#define hbLimit 60			// For a 1.8s delay, 1800mS / 30mS = 60, so 60 interrupts before alarm triggered for real 
 
 // Function prototypes
 void configureTimer(void);			// Configure the timer module at startup
@@ -46,3 +46,4 @@ unsigned int getPeriodA(void);		// Accessor function for periodA var
 unsigned int getPeriodB(void);		// Accessor function for periodB var
 void setHBtimer(void);				// Restore hbCount to zero for another 1.2s alarm delay
 void configureHB(void);				// Configure timer 5 for heartbeat alarm
+void set_hb_alarm_state(unsigned char state);  // Enable or disable the hearbeat alarm clock.
