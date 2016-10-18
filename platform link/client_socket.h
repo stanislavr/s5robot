@@ -9,5 +9,7 @@
 
 #include <stdio.h>
 
-extern char buffer[BUFSIZ];	// data buffer for communications
+#define server_ip = "169.254.168.174"	// Static IP address of platform supervisor - linux VM on school desktop
+#define server_port = "5000"			// Port for socket comms
+
 extern int client_socket;
