@@ -8,7 +8,7 @@
  *      			^^ Slightly modifed code found on this site for comms
  */
 
-#define port_serial "/dev/ttyS1"
+#define port_serial "/dev/ttyUSB0"
 
 int open_port();				// Open the serial port.
 void configure_port(int port);	// Configure a serial port.

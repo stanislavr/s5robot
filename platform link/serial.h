@@ -12,4 +12,4 @@
 
 int open_port();				// Open the serial port.
 int configure_port(int port);	// Configure a serial port.
-int cmd_send(int port, char* buffer);		// Send a command to the robot over serial.
+int cmd_send(int port, char* buffer);		// Send a command to the robot over serial.  

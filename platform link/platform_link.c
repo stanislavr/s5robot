@@ -66,6 +66,7 @@ int main() {
 		// Forward serial data to socket if any
 		if(bRead) {
 			// Write the buffer to the socket
+			printf("%s\n", buffer);			
 			bWrite = write(client_socket, &buffer, bRead);
 			if(bWrite < bRead) {
 				perror("Socket write failed.\n");
@@ -84,6 +85,7 @@ int main() {
 		// Forward socket data to serial if any
 		if(bRead) {
 			// Write the buffer to the serial
+			printf("%s\n", buffer);
 			bWrite = write(serial_port, &buffer, bRead);
 			if(bWrite < bRead) {
 				perror("Serial write failed.\n");
