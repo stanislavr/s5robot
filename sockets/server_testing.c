@@ -103,7 +103,7 @@ main (int argc, char *argv[])
 		//sprintf(buffer, "%d", input);
 		
 		// write to the socket
-		len = write(client_socket, &buffer, len);	
+		len = write(client_socket, &buffer, strlen(buffer));	
 		printf("writing: %s to socket\n", buffer);		
 		if(len < 0) { 
 			perror("error: no data sent");
