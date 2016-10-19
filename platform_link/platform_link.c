@@ -56,6 +56,9 @@ int main() {
 	// Infinite loop of read/write sweet gateway action
 	while(1){
 
+		// Clear buffer
+		memset(&buffer, 0, BUFSIZ);
+
 		// Read serial port
 		bRead = read(serial_port, &buffer, BUFSIZ);
 		if(bRead < 0){
@@ -74,7 +77,9 @@ int main() {
 			}
 		}
 
-		
+		// Clear buffer
+		memset(&buffer, 0, BUFSIZ);
+
 		// Read socket
 		bRead = read(client_socket, &buffer, BUFSIZ);
 		if(bRead < 0){
