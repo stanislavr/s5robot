@@ -348,10 +348,10 @@ int cmd_send(int socket_client, char* buffer) {
 	}
 	
 	// Read the response from the robot
-	bRead = read(client_socket, &RxBuf, sizeof(RxBuf));
+	bRead = read(socket_client, &RxBuf, sizeof(RxBuf));
 	while(bRead <= 1) {
 		memset(&RxBuf, 0, 2);
-		bRead = read(client_socket, &RxBuf, sizeof(RxBuf));
+		bRead = read(socket_client, &RxBuf, sizeof(RxBuf));
 	}
 
 	// If the response is NAK the robot is confused
