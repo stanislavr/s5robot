@@ -15,7 +15,7 @@
 #include <fcntl.h>
 #include <errno.h>
 
-#include "serial.h"
+#include "socket.h"
 #include "platform_supervisor.h"
 
 int drawMenu();			// Draw the menu
@@ -23,11 +23,12 @@ int doStuff(int option);	// Function to handle menu options, takes option, retur
 void sig1handler(int sig);	// Signal from UI process to HB process to enable/disable HB
 void sig2handler(int sig);	// Signal from HB process to UI process to indicate HB failure
 
-
 pid_t heartbeatPid;		// PID of the heartbeat process
 int sigUItoHB = SIGUSR1;	// Signal from UI process to HB process to enable/disable HB
 int sigHBtoUI = SIGUSR2;	// Signal from HB process to UI process to indicate HB failure
-int fdPort;
+int server_socket;			// Server side socket ID for reading data from client
+int client_socket;			// Client side socket ID for writing data to client
+int PORT = 5000;			// Port to use for socket comms
 
 int main() {
 	// Set up signal handlers.
@@ -39,19 +40,32 @@ int main() {
 	sprintf(mainProcessPidBuf, "%d", mainProcessPid);
 
 	// Set up communication
-	fdPort = open_port();		// Open the serial port.
-	char fdPortBuf[10] = {0};
-	sprintf(fdPortBuf, "%d", fdPort);
-	configure_port(fdPort);		// Configure port parameters.	
+	server_socket = open_socket_server(PORT);
+	char server_socket_buf[10] = {0};
+	sprintf(server_socket_buf, "%d", server_socket);
+	if(server_socket < 0) {
+		return -1;
+	}
+
+	client_socket = open_socket_client(PORT, server_socket);
+	char client_socket_buf[10] = {0};
+	sprintf(client_socket_buf, "%d", client_socket);
+	if(client_socket < 0) {
+		return -1;
+	}
+
 
 	// Wait for the robot heartbeat before doing anything.
 	printf("Waiting for robot connection...\n");
 	int bRead = 0;
 	char readBuf;
 	char hbCalling[3] = "<H>";
-	while(!bRead) {
-		write(fdPort, hbCalling, 3);
-		bRead = read(fdPort, &readBuf, 1);
+	while(bRead <= 0) {
+		//printf("sending HB\n");
+		if(write(client_socket, hbCalling, 3) < 1) {
+			perror("Failed to write client socket.");
+		}
+		bRead = read(client_socket, &readBuf, 1);
 	}
 
 	// Set up heartbeat process
@@ -60,8 +74,7 @@ int main() {
 		printf("Failed to fork hb process."); fflush(stdout);
 	}
 	else if(heartbeatPid == 0){
-		//execlp("/home/thomas/Desktop/heartbeat", "heartbeat", mainProcessPidBuf, fdPortBuf, NULL);
-		execlp("./heartbeat", "heartbeat", mainProcessPidBuf, fdPortBuf, NULL);
+		execlp("./heartbeat", "heartbeat", mainProcessPidBuf, client_socket_buf, NULL);
 		printf("Heartbeat execlp failed"); fflush(stdout);
 	}
 
@@ -76,13 +89,15 @@ int main() {
 
 	if(result)
 	{
-		close(fdPort);	// Close the serial port
+		close(server_socket);	// Close the server socket
+		close(client_socket);	// Close the client socket
 		printf("Port Closed.\n");
 		kill(heartbeatPid, SIGTERM);
 		return 0;
 	}
 
-	close(fdPort);	// Close the serial port
+	close(server_socket);	// Close the server socket
+	close(client_socket);	// Close the client socket
 	printf("Port Closed.\n");
 	kill(heartbeatPid, SIGTERM);
 	return 1;	//return 0 for error (shouldn't get here)
@@ -127,7 +142,7 @@ int doStuff(int option)
 		printf("Homing camera.\n");
 		char cmd1[] = "<A>";
 		
-		if(cmd_send(fdPort,cmd1)) {
+		if(cmd_send(client_socket,cmd1)) {
 			return -1;
 		}
 
@@ -196,7 +211,7 @@ int doStuff(int option)
 		printf("Sending DC motor command.\n");
 		sprintf(cmd2, "<B%s%c%s%c>", (char*)lSpeed, lDir, (char*)rSpeed, rDir);
 
-		if(cmd_send(fdPort,cmd2)) {
+		if(cmd_send(client_socket,cmd2)) {
 			return -1;
 		}
 
@@ -224,7 +239,7 @@ int doStuff(int option)
 		/* pack up the command and sent it out. */
 		sprintf(cmd3, "<C%03d>", position);
 
-		if(cmd_send(fdPort,cmd3)) {
+		if(cmd_send(client_socket,cmd3)) {
 			return -1;
 		}
 
@@ -252,7 +267,7 @@ int doStuff(int option)
 		/* pack up the command and sent it out. */
 		sprintf(cmd4, "<D%03d>", position);
 
-		if(cmd_send(fdPort,cmd4)) {
+		if(cmd_send(client_socket,cmd4)) {
 			return -1;
 		}
 		return 0;
@@ -265,7 +280,7 @@ int doStuff(int option)
 		char cmd5[2];
 		sprintf(cmd5, "<H>");
 
-		if(cmd_send(fdPort,cmd5)) {
+		if(cmd_send(client_socket,cmd5)) {
 			return -1;
 		}
 		
@@ -300,4 +315,46 @@ void sig2handler(int sig) {
 	printf("Lost Heartbeat.\n");
 	kill(heartbeatPid, SIGTERM); // Kill the hb process
 	exit(0);
+}
+
+/*
+ * cmd_send()
+ * 
+ * Inputs: 
+ *			socket_client - id of the socket to use for data transmission
+ * 			socket_server - id of the socket to use for data reading (for robot response)
+ * 			buffer - the data to be sent
+ *
+ * Outputs:
+ *			Non-zero for error
+ */
+int cmd_send(int socket_client, char* buffer) {
+
+	char NAK = 0x49;	// Negative ack from robot
+	int bWritten = 0;	// Bytes written to serial port
+	int bRead = 0;		// Bytes read from serial port
+	char RxBuf[2] = {0};	// Buffer for Rx data (should be ack or nak + cmd)
+
+	// Send SIGUSR1 to Heartbeat proccess to tell it to shut up for a bit
+	kill(heartbeatPid, sigUItoHB);	// Send signal to HB process to toggle comms
+
+	bWritten = write(socket_client, buffer, strlen(buffer));
+	if (bWritten < strlen(buffer)) {
+		perror("Write failed.");
+		return -1;
+	}
+
+	while(bRead <= 0) {
+		bRead = read(client_socket, &RxBuf, sizeof(RxBuf));
+	}
+
+	if(RxBuf[0] == NAK) {
+		printf("Invalid command received by robot.\n");
+		return -1;
+	}
+
+	// Send SIGUSR1 to Heartbeat process to tell it to start talking again
+	kill(heartbeatPid, sigUItoHB);	// Send signal to HB process to toggle comms
+
+	return 0;	//Successful command.
 }
