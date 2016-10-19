@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <signal.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 /* Signal Linking */
 int stopComSig = SIGUSR1;
@@ -26,11 +27,12 @@ char HB = 0x48;	// Heartbeat to/from robot
 /*------------------------------- MAIN ----------------------------*/
 int main(int argc, char* argv[]) {
 	pid_t mainProcessPid = atoi(argv[1]);
-	int fdPort = atoi(argv[2]);
+	int client_socket = atoi(argv[2]);
 	unsigned char writeToPort[3] = "<H>";
 	int bytesWritten = 0;
 	int bytesRead = 0; 
 	unsigned char readFromPort[10];
+	int attempts = 0;
 
 	signal(killHeartbeatSig, killHeartbeatHandler);
 	signal(stopComSig, stopComHandler);
@@ -38,16 +40,25 @@ int main(int argc, char* argv[]) {
 //	printf("Heartbeat process Started!\n"); fflush(stdout);
 	for(;;){
 		while(!stopComFlag){
-			bytesWritten = write(fdPort, writeToPort, sizeof(writeToPort));
-			bytesRead = read(fdPort, &readFromPort, 3);
-			if((!bytesRead)||(!(readFromPort[0] == HB))){
-//				printf("readFromPort[0] %i\n", readFromPort[0]);
-//				printf("HB: %i\n", HB);
-//				printf("%d %s %s", bytesRead, writeToPort, readFromPort); fflush(stdout);
+			bytesWritten = write(client_socket, writeToPort, sizeof(writeToPort));
+			
+			for(attempts = 0; attempts < 3; attempts ++) {
+				readFromPort[0] = 0;
+				bytesRead = read(client_socket, &readFromPort, 3);
+				if(bytesRead > 0) {
+					break;
+				}
+			}
+
+			
+			if(readFromPort[0] != HB){
+				//printf("readFromPort[0] %i\n", readFromPort[0]);
+				//printf("HB: %i\n", HB);
+				//printf("%d %s %s", bytesRead, writeToPort, readFromPort); fflush(stdout);
 				kill(mainProcessPid, heartbeatGoneSig);	// Send signal to UI process to kill everything
 			}
-			sleep(1);
-//			printf("Success.\n"); fflush(stdout);
+			sleep(0.5);
+			//printf("Success.\n"); fflush(stdout);
 		}
 	}
 }
