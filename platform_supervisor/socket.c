@@ -69,7 +69,7 @@ int open_socket_client(int PORT, int server_socket) {
 	struct sockaddr_in client_addr;
 	
 	struct timeval tv;
-	tv.tv_sec = 0;	// 1 second timeout for reads
+	tv.tv_sec = 0;			// 1 second timeout for reads
 	tv.tv_usec = 500000;	// Do not initialize this, it can cause strange errors	
 
 	// Try to accept a packet from a client to get its address

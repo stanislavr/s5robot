@@ -18,6 +18,8 @@
 #include "socket.h"
 #include "platform_supervisor.h"
 
+char HB = 0x48;	// Heartbeat to/from robot
+
 int drawMenu();			// Draw the menu
 int doStuff(int option);	// Function to handle menu options, takes option, returns success/fail/exit
 void sig1handler(int sig);	// Signal from UI process to HB process to enable/disable HB
@@ -338,16 +340,21 @@ int cmd_send(int socket_client, char* buffer) {
 	// Send SIGUSR1 to Heartbeat proccess to tell it to shut up for a bit
 	kill(heartbeatPid, sigUItoHB);	// Send signal to HB process to toggle comms
 
+	// Send the command to the robot
 	bWritten = write(socket_client, buffer, strlen(buffer));
 	if (bWritten < strlen(buffer)) {
 		perror("Write failed.");
 		return -1;
 	}
-
-	while(bRead <= 0) {
+	
+	// Read the response from the robot
+	bRead = read(client_socket, &RxBuf, sizeof(RxBuf));
+	while(bRead <= 1) {
+		memset(&RxBuf, 0, 2);
 		bRead = read(client_socket, &RxBuf, sizeof(RxBuf));
 	}
 
+	// If the response is NAK the robot is confused
 	if(RxBuf[0] == NAK) {
 		printf("Invalid command received by robot.\n");
 		return -1;
@@ -355,6 +362,5 @@ int cmd_send(int socket_client, char* buffer) {
 
 	// Send SIGUSR1 to Heartbeat process to tell it to start talking again
 	kill(heartbeatPid, sigUItoHB);	// Send signal to HB process to toggle comms
-
 	return 0;	//Successful command.
 }
