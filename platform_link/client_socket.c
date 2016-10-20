@@ -41,12 +41,16 @@ int configure_client_socket(){
 
 	printf("Connecting to server...\n");
 
-	// Attempt a connection to server
-	if (connect (client_socket, (struct sockaddr *)&server_addr, sizeof (server_addr)) < 0) {
+	// Attempt a connection to server until successful
+	while(connect (client_socket, (struct sockaddr *)&server_addr, sizeof (server_addr)) < 0) {
 		perror("Could not connect to server.");
-		close (client_socket);
-		return -1;
 	}
+
+	// Set a timeout for socket reads
+	struct timeval tv;
+	tv.tv_sec = 2;
+	tv.tv_usec = 0;
+	setsockopt(client_socket, SOL_SOCKET, SO_RCVTIMEO, (char*)&tv, sizeof(struct timeval));
 
 	printf("Success!\n");
 	return 0;
