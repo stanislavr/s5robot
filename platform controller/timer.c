@@ -247,7 +247,7 @@ interrupt 13 void timer5Handler(void) {
     FORCE_OC_ACTION_NOW(SERVO1,OC_GO_LO); // Force pin off    
     SET_OC_ACTION(SERVO1,OC_OFF);         // Set TC0 to not toggle the port pin.
     
-    DISABLE_5VA;                //Shut off the secondary power supply    
+    //DISABLE_5VA;                //Shut off the secondary power supply    
     
     LCDprintf("He's dead Jim!\nLost heartbeat.");
     

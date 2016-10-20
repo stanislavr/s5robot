@@ -32,7 +32,7 @@ int main(int argc, char* argv[]) {
 	int bytesWritten = 0;
 	int bytesRead = 0; 
 	unsigned char readFromPort[10];
-	int attempts = 0;
+	int attempt = 0;
 
 	signal(killHeartbeatSig, killHeartbeatHandler);
 	signal(stopComSig, stopComHandler);
@@ -40,16 +40,17 @@ int main(int argc, char* argv[]) {
 //	printf("Heartbeat process Started!\n"); fflush(stdout);
 	for(;;){
 		while(!stopComFlag){
+			//printf("sending HB\n");
 			bytesWritten = write(client_socket, writeToPort, sizeof(writeToPort));
-			
-			for(attempts = 0; attempts < 3; attempts ++) {
+
+			// Try up to three reads (0.75 second response)
+			for(attempt = 0; attempt < 3; attempt ++) {
 				readFromPort[0] = 0;
 				bytesRead = read(client_socket, &readFromPort, 3);
 				if(bytesRead > 0) {
 					break;
 				}
-			}
-
+			}		
 			
 			if(readFromPort[0] != HB){
 				//printf("readFromPort[0] %i\n", readFromPort[0]);
@@ -57,7 +58,8 @@ int main(int argc, char* argv[]) {
 				//printf("%d %s %s", bytesRead, writeToPort, readFromPort); fflush(stdout);
 				kill(mainProcessPid, heartbeatGoneSig);	// Send signal to UI process to kill everything
 			}
-			sleep(0.5);
+			//printf("received HB\n");
+			sleep(1);
 			//printf("Success.\n"); fflush(stdout);
 		}
 	}
