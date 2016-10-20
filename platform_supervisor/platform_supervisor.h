@@ -8,6 +8,14 @@
  *      			^^ Slightly modifed code found on this site for comms
  */
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <signal.h>
+#include <string.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <errno.h>
+
 extern pid_t heartbeatPid;		// PID of the heartbeat process
 extern int sigUItoHB;	// Signal from UI process to HB process to enable/disable HB
 extern int sigHBtoUI;	// Signal from HB process to UI process to indicate HB failure
