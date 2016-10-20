@@ -14,6 +14,8 @@ unsigned char greeting[] = "Hello World ";
 
 char speedBuf[3];
 char dirBuf[2];
+unsigned char targetSpeed;
+unsigned char moveAction;
 unsigned char lSpeed;
 unsigned char lDir;
 unsigned char rSpeed;
@@ -166,14 +168,101 @@ void main(void) {
         putcSCI('D');      
         setServoPosition(camPos);
         break;
-          
-      // Case H == Received a heatbeat, echo a heartbeat.
-      /*case 'H':
-        TOGGLE_LEDS;
-        putcSCI(HB);
+        
+      
+      // Case S == Set DC motor target speeds
+      case 'S':
+        LCDprintf("Setting\nmotor speeds");
+        
+        // Read & check first parameter (driving action)
+        param1 = consumeSCI();
+        
+        sprintf(speedBuf, "%c%c%c", param1, param2, param3);
+        targetSpeed = (char)atoi(speedBuf);
+        if(!(0 <= targetSpeed <= 255)) {
+          putcSCI(NAK); //Invalid speed input
+          break;
+        }
+        
+        // Acknowledge receipt of command.        
+        putcSCI(ACK);
+        putcSCI('S');      
+        
+        // Set target motor speeds
+        setTargetSpeedA(targetSpeed);
+        setTargetSpeedB(targetSpeed);       
+        break;
+        
+        
+      // Case R == Move robot
+      case 'R':
+        
+        LCDprintf("Moving robot\n");
+                
+        // Read & check first parameter (move action)
+        moveAction = consumeSCI();
+        sprintf(dirBuf, "%c", moveAction);
+        moveAction = (char)atoi(dirBuf);
+        if(!(0 <= moveAction <= 4)) {
+          putcSCI(NAK); //Invalid move action input
+          break;
+        }        
+        
+        // Acknowledge receipt of command.        
+        //putcSCI(ACK);
+        //putcSCI('R');      
+        
+        // Determine direction to set based on move action
+        if(moveAction == 0) {
+          // Stop robot
+          lDir = 0;
+          rDir = 0;
+        } 
+        else if(moveAction == 1) {
+          // Drive forward
+          lDir = 1;
+          rDir = 1;
+        } 
+        else if(moveAction == 2) {
+          // Drive backward
+          lDir = 2;
+          rDir = 2;
+        } 
+        else if(moveAction == 3) {
+          // Turn left
+          lDir = 2;
+          rDir = 1;
+        } 
+        else if(moveAction == 4) {
+          lDir = 1;
+          rDir = 2;
+        }
+        
+        // Get lSpeed & rSpeed & set motor speed        
+        lSpeed = getTargetSpeedA();
+        rSpeed = getTargetSpeedB();
+        
+        dcmControl(lSpeed, lDir, dcmLeft);  //Set left motor params
+        dcmControl(rSpeed, rDir, dcmRight); //Set right motor params
+        LCDprintf("lSpd:%i lDir:%i\nrSpd:%i rDir:%i", lSpeed, lDir, rSpeed, rDir);
+        
+        // Acknowledge receipt of command.        
+        putcSCI(ACK);
+        putcSCI('R');
         setHBtimer(); // Delay the heartbeat timer again.
         break;
-        */
+
+
+      // Case W == Move webcam
+      case 'W':
+        LCDprintf("Move webcam");
+        
+        // Acknowledge receipt of command.        
+        putcSCI(ACK);
+        putcSCI('W');      
+        break;  
+
+  
 
       // Default == Catch all unknown commands        
       default:  // Unknown input.  Return NAK per spec.
