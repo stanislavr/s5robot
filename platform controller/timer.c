@@ -241,8 +241,8 @@ interrupt 13 void timer5Handler(void) {
     // Shut er down Fred.    
     LCDprintf("Lost heartbeat.\n");
     
-    dcmControl(0, 0, dcmLeft);  //Shut off the left DC motor
-    dcmControl(0, 0, dcmRight); //Shut oft the right DC motor
+    dcmAbrk;  //Shut off the left DC motor
+    dcmBbrk; //Shut oft the right DC motor
         
     FORCE_OC_ACTION_NOW(SERVO1,OC_GO_LO); // Force pin off    
     SET_OC_ACTION(SERVO1,OC_OFF);         // Set TC0 to not toggle the port pin.

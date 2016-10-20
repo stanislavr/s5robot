@@ -62,6 +62,7 @@ void configureDCM(void) {
 //;*
 //;**************************************************************  
 void dcmControl(unsigned char speed, unsigned char direction, unsigned char motor) {
+	DisableInterrupts;
 	if(motor == 1) {
 		targetA = speed;    
 	
@@ -107,6 +108,7 @@ void dcmControl(unsigned char speed, unsigned char direction, unsigned char moto
 		  }
 		}
 	} //end of control for right motor
+	EnableInterrupts;
 }//end of dcmControl
 
 
