@@ -42,10 +42,8 @@ int configure_client_socket(){
 	printf("Connecting to server...\n");
 
 	// Attempt a connection to server
-	if (connect (client_socket, (struct sockaddr *)&server_addr, sizeof (server_addr)) < 0) {
+	while(connect (client_socket, (struct sockaddr *)&server_addr, sizeof (server_addr)) < 0) {
 		perror("Could not connect to server.");
-		close (client_socket);
-		return -1;
 	}
 
 	printf("Success!\n");
