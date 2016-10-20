@@ -12,6 +12,8 @@
  *          Shift+M (i.e. Capital M) - exits this mode and brings u back to main menu
  */
 
+#include "platform_supervisor.h"
+
 #ifndef CONTROL_KEYS_H_ 
 	#define CONTROL_KEYS_H_
  	#include "control_keys.h"

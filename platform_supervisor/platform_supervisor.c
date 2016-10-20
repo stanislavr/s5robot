@@ -7,16 +7,9 @@
  *      			^^ Slightly modifed code found on this site for comms
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <signal.h>
-#include <string.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <errno.h>
-
 #include "socket.h"
 #include "platform_supervisor.h"
+#include "control_keys.h"
 
 int drawMenu();			// Draw the menu
 int doStuff(int option);	// Function to handle menu options, takes option, returns success/fail/exit
@@ -273,14 +266,13 @@ int doStuff(int option)
 		return 0;
 	}
 
-	/* user selected demo function */
+	/* Drive Robot */
 	else if(option == 5)
 	{
-		printf("Sending a heartbeat.\n");
-		char cmd5[2];
-		sprintf(cmd5, "<H>");
-
-		if(cmd_send(client_socket,cmd5)) {
+		printf("Starting robot driver magic.\n");
+		
+		if(acceptArrowKey(client_socket)) {
+			printf("acceptArrowKey error\n");
 			return -1;
 		}
 		

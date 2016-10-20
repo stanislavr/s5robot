@@ -43,6 +43,7 @@ int main(int argc, char* argv[]) {
 			bytesWritten = write(client_socket, writeToPort, sizeof(writeToPort));
 			
 			for(attempts = 0; attempts < 3; attempts ++) {
+				bytesWritten = write(client_socket, writeToPort, sizeof(writeToPort));
 				readFromPort[0] = 0;
 				bytesRead = read(client_socket, &readFromPort, 3);
 				if(bytesRead > 0) {
@@ -57,7 +58,7 @@ int main(int argc, char* argv[]) {
 				//printf("%d %s %s", bytesRead, writeToPort, readFromPort); fflush(stdout);
 				kill(mainProcessPid, heartbeatGoneSig);	// Send signal to UI process to kill everything
 			}
-			sleep(0.5);
+			sleep(1);
 			//printf("Success.\n"); fflush(stdout);
 		}
 	}
