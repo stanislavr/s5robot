@@ -26,6 +26,13 @@ int client_socket;			// Client side socket ID for writing data to client
 int PORT = 5000;			// Port to use for socket comms
 
 int main() {
+	// Attempt to set static IP address
+	setuid(0);
+	if(system("/bin/bash ./setIP.sh")) {
+		printf("Error: Could not set static IP address.\n");
+		return -1;
+	}
+
 	// Set up signal handlers.
 	signal(sigHBtoUI, sig2handler);
 
