@@ -6,8 +6,8 @@
 #include "lcd.h"
 
 // Global variables to control the DC Motors
-unsigned char targetA = 0;	// Target speed for Motor A in mm/s
-unsigned char targetB = 0;	// Target speed for Motor B in mm/s
+unsigned char targetA = 50;	// Target speed for Motor A in mm/s
+unsigned char targetB = 50;	// Target speed for Motor B in mm/s
 unsigned char dcmA_dir = 0; // Currently set direction for Motor A
 unsigned char dcmB_dir = 0; // Currently set direction for Motor B
 
@@ -62,6 +62,7 @@ void configureDCM(void) {
 //;*
 //;**************************************************************  
 void dcmControl(unsigned char speed, unsigned char direction, unsigned char motor) {
+	DisableInterrupts;
 	if(motor == 1) {
 		targetA = speed;    
 	
@@ -107,6 +108,7 @@ void dcmControl(unsigned char speed, unsigned char direction, unsigned char moto
 		  }
 		}
 	} //end of control for right motor
+	EnableInterrupts;
 }//end of dcmControl
 
 
@@ -139,5 +141,27 @@ unsigned char getTargetSpeedA(void) {
 unsigned char getTargetSpeedB(void) { 
   DisableInterrupts;
   return targetB;
+  EnableInterrupts;
+}//end of getTargetSpeedB()
+
+
+//;**************************************************************
+//;*                 setTargetSpeedA()
+//;*  Sets motor A target/set speed in mm/s
+//;**************************************************************
+void setTargetSpeedA(unsigned char target) {
+  DisableInterrupts;
+  targetA = target;
+  EnableInterrupts;
+}//end of setTargetSpeedA()
+
+
+//;**************************************************************
+//;*                 setTargetSpeedB()
+//;*  Sets motor A target/set speed in mm/s
+//;**************************************************************
+void setTargetSpeedB(unsigned char target) { 
+  DisableInterrupts;
+  targetB = target;
   EnableInterrupts;
 }//end of getTargetSpeedB()

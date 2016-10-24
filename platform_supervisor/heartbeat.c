@@ -45,6 +45,7 @@ int main(int argc, char* argv[]) {
 
 			// Try up to three reads (0.75 second response)
 			for(attempt = 0; attempt < 3; attempt ++) {
+				bytesWritten = write(client_socket, writeToPort, sizeof(writeToPort));
 				readFromPort[0] = 0;
 				bytesRead = read(client_socket, &readFromPort, 3);
 				if(bytesRead > 0) {

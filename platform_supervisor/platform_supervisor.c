@@ -7,16 +7,9 @@
  *      			^^ Slightly modifed code found on this site for comms
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <signal.h>
-#include <string.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <errno.h>
-
 #include "socket.h"
 #include "platform_supervisor.h"
+#include "control_keys.h"
 
 char HB = 0x48;	// Heartbeat to/from robot
 
@@ -33,6 +26,13 @@ int client_socket;			// Client side socket ID for writing data to client
 int PORT = 5000;			// Port to use for socket comms
 
 int main() {
+	// Attempt to set static IP address
+	setuid(0);
+	if(system("/bin/bash ./setIP.sh")) {
+		printf("Error: Could not set static IP address.\n");
+		return -1;
+	}
+
 	// Set up signal handlers.
 	signal(sigHBtoUI, sig2handler);
 
@@ -278,11 +278,10 @@ int doStuff(int option)
 	/* user selected demo function */
 	else if(option == 5)
 	{
-		printf("Sending a heartbeat.\n");
-		char cmd5[2];
-		sprintf(cmd5, "<H>");
-
-		if(cmd_send(client_socket,cmd5)) {
+		printf("Entering driving mode.\n");
+		
+		if(acceptArrowKey(client_socket)) {
+			printf("acceptArrowKey error.\n");
 			return -1;
 		}
 		

@@ -78,3 +78,5 @@ void dcmControl(unsigned char speed, unsigned char direction, unsigned char moto
 unsigned char speed_mms(unsigned long period);	// Convert period in TCNT ticks to mm/s
 unsigned char getTargetSpeedA(void);			// Returns motor A target speed in mm/s
 unsigned char getTargetSpeedB(void);			// Returns motor B target speed in mm/s
+void setTargetSpeedA(unsigned char);			// Sets motor A target speed in mm/s
+void setTargetSpeedB(unsigned char);			// Sets motor B target speed in mm/s

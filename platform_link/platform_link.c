@@ -32,6 +32,12 @@ int bRead;						// Number of bytes read
 int bWrite;						// Number of bytes written
 
 int main() {
+	// Attempt to set static IP address
+	setuid(0);
+	if(system("/bin/bash ./setIP.sh")){
+		printf("Error: Could not set static IP address.\n");
+		return -1;
+	}
 		
 	// Set up socket comm.
 	if (configure_client_socket()) {
