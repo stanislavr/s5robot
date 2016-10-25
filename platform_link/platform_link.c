@@ -46,9 +46,10 @@ int main() {
 	}
 
 	// Attempt to start webcam service
-	if(system("/bin/bash ./webcam_start.sh")) {
-		printf("Error: Could not start webcam service\n");
-	}
+	//needs to be a fork
+	//if(system("/bin/bash ./webcam_start.sh")) {
+	//	printf("Error: Could not start webcam service\n");
+	//}
 
 	// Set up socket comm.
 	if (configure_client_socket()) {
