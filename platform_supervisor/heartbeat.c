@@ -9,6 +9,7 @@
 #include <signal.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <string.h>
 
 /* Signal Linking */
 int stopComSig = SIGUSR1;
@@ -40,23 +41,30 @@ int main(int argc, char* argv[]) {
 //	printf("Heartbeat process Started!\n"); fflush(stdout);
 	for(;;){
 		while(!stopComFlag){
-			//printf("sending HB\n");
-			bytesWritten = write(client_socket, writeToPort, sizeof(writeToPort));
 
-			// Try up to three reads (0.75 second response)
-			for(attempt = 0; attempt < 3; attempt ++) {
+			// Try up to three reads (0.5 second timeout)
+			while(attempt < 10) {
+				// Write HB
 				bytesWritten = write(client_socket, writeToPort, sizeof(writeToPort));
-				readFromPort[0] = 0;
+				
+				// Listen for response (0.5 second timeout)
+				memset(&readFromPort, 0, 10);
 				bytesRead = read(client_socket, &readFromPort, 3);
+				
 				if(bytesRead > 0) {
 					break;
 				}
-			}		
-			
+				attempt ++;
+			}
+
+			if(bytesRead <= 0) {
+				printf("Failed to read HB response.\n");
+				kill(mainProcessPid, heartbeatGoneSig);	// Send signal to UI process to kill everything
+			}
 			if(readFromPort[0] != HB){
-				//printf("readFromPort[0] %i\n", readFromPort[0]);
-				//printf("HB: %i\n", HB);
-				//printf("%d %s %s", bytesRead, writeToPort, readFromPort); fflush(stdout);
+				printf("readFromPort[0] %i\n", readFromPort[0]);
+				printf("HB: %i\n", HB);
+				printf("%d %s %s", bytesRead, writeToPort, readFromPort); fflush(stdout);
 				kill(mainProcessPid, heartbeatGoneSig);	// Send signal to UI process to kill everything
 			}
 			//printf("received HB\n");
@@ -68,7 +76,6 @@ int main(int argc, char* argv[]) {
 
 // Signal handler for when we want to kill this process
 void killHeartbeatHandler(int sig){
-//	printf("I got here.\n");
 	exit(0);
 }
 
@@ -77,9 +84,11 @@ void stopComHandler(int sig){
 //	stopComFlag == 0 ? 1 : 0;
 	if (stopComFlag == 0){
 		stopComFlag = 1;
+		//printf("Not talking\n");
 	}
 	else{
 		stopComFlag = 0;
+		//printf("Talking\n");
 	}
 	signal(stopComSig, stopComHandler);
 }

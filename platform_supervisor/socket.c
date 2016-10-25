@@ -64,6 +64,7 @@ int open_socket_server(int PORT) {
 
 // Function to open the client side socket used for writing data to client
 int open_socket_client(int PORT, int server_socket) {
+	int iSetOption = 1;
 	int client_len;
 	int client_socket;
 	struct sockaddr_in client_addr;
@@ -84,6 +85,10 @@ int open_socket_client(int PORT, int server_socket) {
 
 	// Set read timeout for the socket
 	setsockopt(client_socket, SOL_SOCKET, SO_RCVTIMEO, (char*)&tv, sizeof(struct timeval));
+
+	// Set SO_REUSEADDR socket option so we can re-start the program right away
+	setsockopt(client_socket, SOL_SOCKET, SO_REUSEADDR, (char*)&iSetOption, sizeof(iSetOption));
+
 
 	return client_socket;
 }

@@ -74,10 +74,12 @@ int main() {
 	heartbeatPid = fork();
 	if(heartbeatPid  < 0){
 		printf("Failed to fork hb process."); fflush(stdout);
+		return -1;
 	}
 	else if(heartbeatPid == 0){
 		execlp("./heartbeat", "heartbeat", mainProcessPidBuf, client_socket_buf, NULL);
 		printf("Heartbeat execlp failed"); fflush(stdout);
+		return -1;
 	}
 
 	// Create a really great UI
@@ -314,6 +316,9 @@ void sig1handler(int sig) {
 void sig2handler(int sig) {
 	signal(sigHBtoUI, sig2handler);
 	printf("Lost Heartbeat.\n");
+	close(server_socket);	// Close the server socket
+	close(client_socket);	// Close the client socket
+	printf("Port Closed.\n");
 	kill(heartbeatPid, SIGTERM); // Kill the hb process
 	exit(0);
 }
@@ -331,13 +336,17 @@ void sig2handler(int sig) {
  */
 int cmd_send(int socket_client, char* buffer) {
 
-	char NAK = 0x49;	// Negative ack from robot
+	char NAK = 0x49;	// Invalid response from robot (I)
+	char ACK = 0x53;	// Successful response from robot (S)
 	int bWritten = 0;	// Bytes written to serial port
 	int bRead = 0;		// Bytes read from serial port
-	char RxBuf[2] = {0};	// Buffer for Rx data (should be ack or nak + cmd)
+	char RxBuf[4] = {0};	// Buffer for Rx data (should be ack or nak + cmd)
+	int attempts = 0;		// Try up to 3 times to read response from robot
 
 	// Send SIGUSR1 to Heartbeat proccess to tell it to shut up for a bit
-	kill(heartbeatPid, sigUItoHB);	// Send signal to HB process to toggle comms
+	//if(kill(heartbeatPid, sigUItoHB)) {
+	//	printf("Error: Could not shut up the HB process.\n");
+	//}
 
 	// Send the command to the robot
 	bWritten = write(socket_client, buffer, strlen(buffer));
@@ -346,11 +355,28 @@ int cmd_send(int socket_client, char* buffer) {
 		return -1;
 	}
 	
-	// Read the response from the robot
-	bRead = read(socket_client, &RxBuf, sizeof(RxBuf));
-	while(bRead <= 1) {
-		memset(&RxBuf, 0, 2);
-		bRead = read(socket_client, &RxBuf, sizeof(RxBuf));
+	// Read the response from the robot, make sure it is an ack (S)
+	/*
+	while(attempts < 3) {
+		memset(&RxBuf, 0, 4);
+		bRead = read(socket_client, &RxBuf, 4);
+		printf("Read: %s\n", RxBuf);
+
+		if(RxBuf[0] == ACK){
+			break;
+		}
+		if(RxBuf[1] == ACK) {
+			break;
+		}
+
+		attempts ++;
+		write(socket_client, buffer, strlen(buffer));
+	}
+
+	// If nothing read, throw error
+	if(bRead <= 0) {
+		printf("Error: No response read from robot.\n");
+		return -1;
 	}
 
 	// If the response is NAK the robot is confused
@@ -358,8 +384,13 @@ int cmd_send(int socket_client, char* buffer) {
 		printf("Invalid command received by robot.\n");
 		return -1;
 	}
+	
 
 	// Send SIGUSR1 to Heartbeat process to tell it to start talking again
-	kill(heartbeatPid, sigUItoHB);	// Send signal to HB process to toggle comms
+	if (kill(heartbeatPid, sigUItoHB)) {
+		printf("Error: Could not wake up the HB process.\n");
+	}
+*/
+
 	return 0;	//Successful command.
 }
