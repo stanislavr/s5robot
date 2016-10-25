@@ -160,6 +160,7 @@ while((ch = getch()) != menu_ch)
                         if(cmd_send(socket_client,"<R3>")) {
                             return -1;
                         }
+                        timeout(100);
 
                         last_ch = ch; //update last key pressed;
                     }
@@ -190,6 +191,7 @@ while((ch = getch()) != menu_ch)
                         if(cmd_send(socket_client,"<R4>")) {
                             return -1;
                         }
+                        timeout(100);
 
                         last_ch = ch; //update last key pressed;
                     }
@@ -323,6 +325,7 @@ while((ch = getch()) != menu_ch)
                 }
 
                 last_ch = '0'; // value to show timedout key
+                ch = '0';
 		      	break;
 
     default:    
