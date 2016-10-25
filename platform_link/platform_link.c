@@ -39,6 +39,12 @@ int main() {
 		return -1;
 	}
 		
+	// Attempt to enable write access for ttyUSB0 (for USB to Serial adapter)
+	if(system("/bin/bash ./chmodUSB0.sh")) {
+		printf("Error: Could not set permissions for ttyUSB0.\n");
+		return -1;
+	}
+
 	// Set up socket comm.
 	if (configure_client_socket()) {
 		return -1;
