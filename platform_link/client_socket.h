@@ -7,7 +7,7 @@
  *      References: 
  */
 
-#define server_ip "192.168.0.103"	// Static IP address of platform supervisor - linux VM on school desktop
+#define server_ip "192.168.0.169"	// Static IP address of platform supervisor - linux VM on school desktop
 #define server_port "5000"			// Port for socket comms
 
 extern int client_socket;
