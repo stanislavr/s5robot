@@ -45,6 +45,11 @@ int main() {
 		return -1;
 	}
 
+	// Attempt to start webcam service
+	if(system("/bin/bash ./webcam_start.sh")) {
+		printf("Error: Could not start webcam service\n");
+	}
+
 	// Set up socket comm.
 	if (configure_client_socket()) {
 		return -1;
