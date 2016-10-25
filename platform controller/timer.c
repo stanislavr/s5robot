@@ -47,8 +47,8 @@ unsigned char periodBcount = 0;          // Number of filled elements in the buf
 static unsigned char hbCount = 0;
 
 // Error between set speed and recorded speed.
-static signed char errorA;   // Error between speedA (mm/s from encoder) to targetA which is currently set motor speed in mm/s
-static signed char errorB;   // Error between speedB (mm/s from encoder) to targetB which is currently set motor speed in mm/s
+static signed long errorA;   // Error between speedA (mm/s from encoder) to targetA which is currently set motor speed in mm/s
+static signed long errorB;   // Error between speedB (mm/s from encoder) to targetB which is currently set motor speed in mm/s
 static signed long errorA_I = 0;  // Error for the integral controller
 static signed long errorB_I = 0;  // Error for the integral controller
 static unsigned char PWMDTY_A = 0;      // Duty cycle for Motor A (from 0 - 255)
@@ -250,10 +250,11 @@ interrupt 13 void timer5Handler(void) {
     //DISABLE_5VA;                //Shut off the secondary power supply    
     
     LCDprintf("He's dead Jim!\nLost heartbeat.");
+    set_hb_alarm_state(0);
     
-    DisableInterrupts;
+    //DisableInterrupts;
     
-    for(;;);  // Infinite loop of sadness and failure.
+    //for(;;);  // Infinite loop of sadness and failure.
   }
 }//end of timer5Handler()
 
@@ -263,12 +264,12 @@ interrupt 13 void timer5Handler(void) {
 //;*  We got a new heartbeat, woohoo, set the hbCount back to zero.
 //;**************************************************************
 void setHBtimer(void) {
-  DisableInterrupts;
   hbCount = 0;
-  EnableInterrupts;
-  
+    
   if(hb_alarm_state == 0) {
     set_hb_alarm_state(1);
+    configureServo();
+    LCDprintf("Heartbeat\nenabled.");  
   }    
   
 }
