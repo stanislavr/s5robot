@@ -75,11 +75,7 @@ int main() {
 		bRead = read(serial_port, &buffer, BUFSIZ);
 		if(bRead < 0){
 			perror("Serial read failed.\n");
-
-			// Set up socket comm.
-			if (configure_client_socket()) {
-				return -1;
-			}
+			return -1;
 		}
 
 		// Forward serial data to socket if any
@@ -104,7 +100,11 @@ int main() {
 		bRead = read(client_socket, &buffer, BUFSIZ);
 		if(bRead < 0){
 			perror("Socket read failed.\n");
-			return -1;
+			
+			// Set up socket comm.
+			if (configure_client_socket()) {
+				return -1;
+			}
 		}
 
 		// Forward socket data to serial if any
