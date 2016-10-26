@@ -18,6 +18,7 @@
 #include <netdb.h>
 #include <fcntl.h>
 #include <errno.h>
+#include <wiringPi.h>
 
 #include "serial.h"
 #include "platform_link.h"
@@ -32,15 +33,22 @@ int bRead;						// Number of bytes read
 int bWrite;						// Number of bytes written
 
 int main() {
+	// Setup GPIO utilitiy
+	wiringPiSetup();
+	pinMode(0, OUTPUT);
+	pinMode(1, OUTPUT);
+	digitalWrite(0, HIGH);
+	digitalWrite(1, LOW);	
+	
 	// Attempt to set static IP address
 	setuid(0);
-	if(system("/bin/bash ./setIP.sh")){
+	if(system("/bin/bash /home/epl/s5robot/platform_link/setIP.sh")){
 		printf("Error: Could not set static IP address.\n");
 		return -1;
 	}
 		
 	// Attempt to enable write access for ttyUSB0 (for USB to Serial adapter)
-	if(system("/bin/bash ./chmodUSB0.sh")) {
+	if(system("/bin/bash /home/epl/s5robot/platform_link/chmodUSB0.sh")) {
 		printf("Error: Could not set permissions for ttyUSB0.\n");
 		return -1;
 	}
