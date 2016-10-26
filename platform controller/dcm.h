@@ -72,6 +72,9 @@
 //#define gainP 2u
 //#define gainI 2u
 
+#define cornerSpeed 35
+#define straightSpeed 100
+
 // Function prototypes
 void configureDCM(void);	// Configure parameters for DC motor operation
 void dcmControl(unsigned char speed, unsigned char direction, unsigned char motor);	// Set the target speed and direction for each motor

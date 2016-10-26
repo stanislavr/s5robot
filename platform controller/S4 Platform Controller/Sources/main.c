@@ -14,7 +14,7 @@ unsigned char greeting[] = "Hello World ";
 
 char speedBuf[3];
 char dirBuf[2];
-unsigned char targetSpeed;
+unsigned char targetSpeed = straightSpeed;
 unsigned char moveAction;
 unsigned char lSpeed;
 unsigned char lDir;
@@ -63,8 +63,8 @@ void main(void) {
         setServoPosition(servoLimit_Home);       
 
         // Acknowledge receipt of command.        
-        putcSCI(ACK);
-        putcSCI('A');
+        //putcSCI(ACK);
+        //putcSCI('A');
         
         // Home stepper.
         homeStepper();
@@ -121,8 +121,8 @@ void main(void) {
         dcmControl(rSpeed, rDir, dcmRight); //Set right motor params
         
         // Acknowledge receipt of command.        
-        putcSCI(ACK);
-        putcSCI('B');
+        //putcSCI(ACK);
+        //putcSCI('B');
         setHBtimer(); // Delay the heartbeat timer again.
         LCDprintf("lSpd:%i lDir:%i\nrSpd:%i rDir:%i", lSpeed, lDir, rSpeed, rDir);
         break;
@@ -143,8 +143,8 @@ void main(void) {
         }
         
         // Acknowledge receipt of command.        
-        putcSCI(ACK);
-        putcSCI('C');      
+        //putcSCI(ACK);
+        //putcSCI('C');      
         setStepperPos(camPos);
         break;
 
@@ -164,8 +164,8 @@ void main(void) {
         }
         
         // Acknowledge receipt of command.        
-        putcSCI(ACK);
-        putcSCI('D');      
+        //putcSCI(ACK);
+        //putcSCI('D');      
         setServoPosition(camPos);
         break;
         
@@ -173,10 +173,11 @@ void main(void) {
       // Case S == Set DC motor target speeds
       case 'S':
         LCDprintf("Setting\nmotor speeds");
-        
-        // Read & check first parameter (driving action)
+
+        // Read & check first parameter (robot speed)        
         param1 = consumeSCI();
-        
+        param2 = consumeSCI();
+        param3 = consumeSCI();
         sprintf(speedBuf, "%c%c%c", param1, param2, param3);
         targetSpeed = (char)atoi(speedBuf);
         if(!(0 <= targetSpeed <= 255)) {
@@ -184,18 +185,20 @@ void main(void) {
           break;
         }
         
-        // Acknowledge receipt of command.        
-        putcSCI(ACK);
-        putcSCI('S');      
+        LCDprintf("Motor speeds\nset to: %i\n", targetSpeed);
         
-        // Set target motor speeds
-        setTargetSpeedA(targetSpeed);
-        setTargetSpeedB(targetSpeed);       
+        // Acknowledge receipt of command.        
+        //putcSCI(ACK);
+        //putcSCI('S');      
         break;
         
         
       // Case R == Move robot
       case 'R':
+      
+        // Acknowledge receipt of command.        
+        //putcSCI(ACK);
+        //putcSCI('R');
         
         LCDprintf("Moving robot\n");
                 
@@ -208,10 +211,6 @@ void main(void) {
           break;
         }        
         
-        // Acknowledge receipt of command.        
-        //putcSCI(ACK);
-        //putcSCI('R');      
-        
         // Determine direction to set based on move action
         if(moveAction == 0) {
           // Stop robot
@@ -222,34 +221,46 @@ void main(void) {
           // Drive forward
           lDir = 1;
           rDir = 1;
+          
+          // Get lSpeed & rSpeed & set motor speed        
+          lSpeed = targetSpeed;
+          rSpeed = targetSpeed;
         } 
         else if(moveAction == 2) {
           // Drive backward
           lDir = 2;
           rDir = 2;
+          
+          //Get lSpeed & rSpeed & set motor speed        
+          lSpeed = targetSpeed;
+          rSpeed = targetSpeed;
         } 
         else if(moveAction == 3) {
           // Turn left
           lDir = 2;
           rDir = 1;
+          
+          //Get lSpeed & rSpeed & set motor speed        
+          lSpeed = cornerSpeed;
+          rSpeed = cornerSpeed;
         } 
         else if(moveAction == 4) {
+          // Turn right
           lDir = 1;
           rDir = 2;
+          
+          //Get lSpeed & rSpeed & set motor speed        
+          lSpeed = cornerSpeed;
+          rSpeed = cornerSpeed;
         }
         
-        // Get lSpeed & rSpeed & set motor speed        
-        lSpeed = getTargetSpeedA();
-        rSpeed = getTargetSpeedB();
+
         
         dcmControl(lSpeed, lDir, dcmLeft);  //Set left motor params
         dcmControl(rSpeed, rDir, dcmRight); //Set right motor params
         LCDprintf("lSpd:%i lDir:%i\nrSpd:%i rDir:%i", lSpeed, lDir, rSpeed, rDir);
         
-        // Acknowledge receipt of command.        
-        putcSCI(ACK);
-        putcSCI('R');
-        setHBtimer(); // Delay the heartbeat timer again.
+        //setHBtimer(); // Delay the heartbeat timer again.
         break;
 
 
@@ -258,8 +269,8 @@ void main(void) {
         LCDprintf("Move webcam");
         
         // Acknowledge receipt of command.        
-        putcSCI(ACK);
-        putcSCI('W');      
+        //putcSCI(ACK);
+        //putcSCI('W');      
         break;  
 
   

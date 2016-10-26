@@ -93,17 +93,11 @@ int main() {
 
 	if(result)
 	{
-		close(server_socket);	// Close the server socket
-		close(client_socket);	// Close the client socket
-		printf("Port Closed.\n");
-		kill(heartbeatPid, SIGTERM);
+		kill_everything();
 		return 0;
 	}
 
-	close(server_socket);	// Close the server socket
-	close(client_socket);	// Close the client socket
-	printf("Port Closed.\n");
-	kill(heartbeatPid, SIGTERM);
+	kill_everything();
 	return 1;	//return 0 for error (shouldn't get here)
 
 }
@@ -118,10 +112,10 @@ int drawMenu()
 	/* display menu options */
 	printf("--------- Welcome to RobotLAND ------\n");
 	printf("-- 1: Home camera                  --\n");
-	printf("-- 2: Control DC Motors            --\n");
+	printf("-- 2: Set robot speed              --\n");
 	printf("-- 3: Pan Camera                   --\n");
 	printf("-- 4: Tilt Camera                  --\n");
-	printf("-- 5: Demo Function                --\n");
+	printf("-- 5: Drive robot                  --\n");
 	printf("-- 6: Exit RobotLAND               --\n");
 	printf("-------------------------------------\n");
 	printf("------ Select an Action (1-6) -------\n");
@@ -140,7 +134,7 @@ int drawMenu()
 
 int doStuff(int option)
 {
-	/* user selected configure modules & home camera */
+	// user selected configure modules & home camera
 	if(option == 1)
 	{
 		printf("Homing camera.\n");
@@ -155,7 +149,34 @@ int doStuff(int option)
 		return 0;
 	}
 
-	/* user selected DC motor control */
+	// user selected set DC motor speed
+	else if(option == 2) {
+		int speed;
+		char cmd3[6];
+
+		// get robot speed from user 
+		printf("Enter desired robot speed (0-255 mm/s).\n");
+		scanf("%i", &speed);
+		if(speed < 0) {
+			speed = 0;
+		}
+		if(speed > 255) {
+			speed = 255;
+		}
+	
+		// pack up the command and sent it out. 
+		sprintf(cmd3, "<S%03d>", speed);
+
+		if(cmd_send(client_socket,cmd3)) {
+			return -1;
+		}
+
+		printf("Robot speed command processed.\n");
+		return 0;		
+	}
+
+	// user selected DC motor control
+	/*
 	else if(option == 2)
 	{
 
@@ -171,7 +192,7 @@ int doStuff(int option)
 		char lDir = 0;
 		char rDir = 0;
 
-		/* get left speed parameter from user */
+		// get left speed parameter from user
 		printf("Enter left motor speed (0-100).\n");
 		scanf("%i", &lSpeedNum);
 		if(lSpeedNum < 0) {
@@ -182,7 +203,7 @@ int doStuff(int option)
 		}
 		sprintf(lSpeed, "%03d", lSpeedNum);
 
-		/* get left motor direction parameter from user */
+		// get left motor direction parameter from user 
 		printf("Enter left motor direction.\n");
 		printf("0 = Stop, 1 = Forward, 2 = Reverse\n");
 		scanf("%i", &lDirNum);
@@ -191,7 +212,7 @@ int doStuff(int option)
 		}
 		sprintf(&lDir, "%d", lDirNum);
 		
-		/* get right speed parameter from user */
+		// get right speed parameter from user 
 		printf("Enter right motor speed (0-100).\n");
 		scanf("%i", &rSpeedNum);
 		if(rSpeedNum < 0) {
@@ -202,7 +223,7 @@ int doStuff(int option)
 		}
 		sprintf(rSpeed, "%03d", rSpeedNum);		
 
-		/* get right motor direction parameter from user */
+		// get right motor direction parameter from user 
 		printf("Enter right motor direction.\n");
 		printf("0 = Stop, 1 = Forward, 2 = Reverse\n");
 		scanf("%i", &rDirNum);
@@ -211,7 +232,7 @@ int doStuff(int option)
 		}
 		sprintf(&rDir, "%d", rDirNum);
 
-		/* Ship out the command like a boss */
+		// Ship out the command like a boss 
 		printf("Sending DC motor command.\n");
 		sprintf(cmd2, "<B%s%c%s%c>", (char*)lSpeed, lDir, (char*)rSpeed, rDir);
 
@@ -221,15 +242,15 @@ int doStuff(int option)
 
 		printf("DC command processed.\n");
 		return 0;
-	}
+	}*/
 
-	/* user selected pan camera */
+	// user selected pan camera 
 	else if(option == 3)
 	{
 		int position;
 		char cmd3[6];
 
-		/* get pan position from user */
+		// get pan position from user 
 		printf("Enter position to pan camera (degrees).\n");
 		printf("0 = Left Limit\n180 = Right Limit\n");
 		scanf("%i", &position);
@@ -240,7 +261,7 @@ int doStuff(int option)
 			position = 180;
 		}
 	
-		/* pack up the command and sent it out. */
+		// pack up the command and sent it out. 
 		sprintf(cmd3, "<C%03d>", position);
 
 		if(cmd_send(client_socket,cmd3)) {
@@ -251,13 +272,13 @@ int doStuff(int option)
 		return 0;
 	}
 
-	/* user selected tilt camera */
+	// user selected tilt camera 
 	else if(option == 4)
 	{
 		int position;
 		char cmd4[6];
 
-		/* get tilt position from user */
+		// get tilt position from user 
 		printf("Enter position to tilt camera (degrees).\n");
 		printf("0 = Upper Limit\n180 = Lower Limit\n");
 		scanf("%i", &position);
@@ -268,7 +289,7 @@ int doStuff(int option)
 			position = 180;
 		}
 	
-		/* pack up the command and sent it out. */
+		// pack up the command and sent it out. 
 		sprintf(cmd4, "<D%03d>", position);
 
 		if(cmd_send(client_socket,cmd4)) {
@@ -277,7 +298,7 @@ int doStuff(int option)
 		return 0;
 	}
 
-	/* user selected demo function */
+	// user selected demo function 
 	else if(option == 5)
 	{
 		printf("Entering driving mode.\n");
@@ -290,16 +311,16 @@ int doStuff(int option)
 		return 0;
 	}
 
-	/* user selected exit program */
+	// user selected exit program 
 	else if(option == 6)
 	{
-		/* exit the program with code 1 */
+		// exit the program with code 1 
 		printf("---------- Exiting Script ---------\n");
 
 		return 1;
 	}
 
-	/* user entered invalid input */
+	// user entered invalid input 
 	else
 	{
 		printf("Invalid Input. Please enter 1-6 for Option\n");
@@ -315,11 +336,11 @@ void sig1handler(int sig) {
 // Signal from HB process to UI process to indicate HB failure
 void sig2handler(int sig) {
 	signal(sigHBtoUI, sig2handler);
+	
+	kill_everything();
+
 	printf("Lost Heartbeat.\n");
-	close(server_socket);	// Close the server socket
-	close(client_socket);	// Close the client socket
-	printf("Port Closed.\n");
-	kill(heartbeatPid, SIGTERM); // Kill the hb process
+
 	exit(0);
 }
 
@@ -393,4 +414,21 @@ int cmd_send(int socket_client, char* buffer) {
 */
 
 	return 0;	//Successful command.
+}
+
+int kill_everything(){
+	endwin(); /* End curses mode         */
+
+	close(server_socket);	// Close the server socket
+	close(client_socket);	// Close the client socket
+
+	if(system("/bin/bash ./forceKillport.sh")) {
+		printf("Error: Could not kill port.\n");
+		return -1;
+	}
+
+	printf("Port Closed.\n");
+	kill(heartbeatPid, SIGTERM);
+
+	return 0;
 }

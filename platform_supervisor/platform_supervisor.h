@@ -21,4 +21,5 @@ extern int sigUItoHB;	// Signal from UI process to HB process to enable/disable 
 extern int sigHBtoUI;	// Signal from HB process to UI process to indicate HB failure
 
 int cmd_send(int socket_client, char* buffer);	// Send a command to the robot over the socket.
+int kill_everything();
 //int cmd_send(int socket_client, int socket_server, char* buffer);	// Send a command to the robot over the socket.
