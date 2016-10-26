@@ -160,7 +160,7 @@ while((ch = getch()) != menu_ch)
                         if(cmd_send(socket_client,"<R3>")) {
                             return -1;
                         }
-                        timeout(100);
+                        timeout(50);
 
                         last_ch = ch; //update last key pressed;
                     }
@@ -191,7 +191,7 @@ while((ch = getch()) != menu_ch)
                         if(cmd_send(socket_client,"<R4>")) {
                             return -1;
                         }
-                        timeout(100);
+                        timeout(50);
 
                         last_ch = ch; //update last key pressed;
                     }
