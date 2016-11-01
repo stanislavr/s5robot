@@ -24,6 +24,8 @@ int sigHBtoUI = SIGUSR2;	// Signal from HB process to UI process to indicate HB 
 int server_socket;			// Server side socket ID for reading data from client
 int client_socket;			// Client side socket ID for writing data to client
 int PORT = 5000;			// Port to use for socket comms
+int temperature = 0;		// Robot reported temperature in degrees celcius
+int attempts = 0;			// Counter for number of read attempts
 
 int main() {
 	// Attempt to set static IP address
@@ -116,9 +118,10 @@ int drawMenu()
 	printf("-- 3: Pan Camera                   --\n");
 	printf("-- 4: Tilt Camera                  --\n");
 	printf("-- 5: Drive robot                  --\n");
-	printf("-- 6: Exit RobotLAND               --\n");
+	printf("-- 6: Get environmental data       --\n");
+	printf("-- 7: Exit RobotLAND               --\n");
 	printf("-------------------------------------\n");
-	printf("------ Select an Action (1-6) -------\n");
+	printf("------ Select an Action (1-7) -------\n");
 
 	/* get input from user */
 	int input;
@@ -298,7 +301,7 @@ int doStuff(int option)
 		return 0;
 	}
 
-	// user selected demo function 
+	// user selected drive robot
 	else if(option == 5)
 	{
 		printf("Entering driving mode.\n");
@@ -311,8 +314,64 @@ int doStuff(int option)
 		return 0;
 	}
 
-	// user selected exit program 
+	// user selected get environmental data
 	else if(option == 6)
+	{
+		int bRead = 0;
+		char readBuf;
+		char attempts = 0;			// Counter for number of read attempts
+
+		printf("Getting environmental data.\n");
+		char cmd1[] = "<E>";
+		
+		// Send SIGUSR1 to Heartbeat proccess to tell it to shut up for a bit
+		if(kill(heartbeatPid, sigUItoHB)) {
+			printf("Error: Could not shut up the HB process.\n");
+		}
+
+		// Send the request for data
+		if(cmd_send(client_socket,cmd1)) {
+			return -1;
+		}
+
+		// Read data back - try up to 10 times then fail.
+		while(attempts < 10) {
+			bRead = read(client_socket, &readBuf, 1);
+
+			// If we read data, check that it isn't a heartbeat
+			if(bRead > 0) {
+				// If it is a heartbeat just ignore it
+				if(readBuf == HB) {
+					attempts ++;
+					continue;
+				}
+				else {
+					break;
+				}
+			}
+
+			attempts ++;
+		}
+
+		// If we didn't read anything exit with error.
+		if(bRead <=0) {
+			printf("Failed to get environmental data.\n");
+			return -1;
+		}
+
+		// If we got data back, it is probably the temperature...
+		printf("Temperature: %i celcius.\n", readBuf);
+
+		// Send SIGUSR1 to Heartbeat process to tell it to start talking again
+		if (kill(heartbeatPid, sigUItoHB)) {
+			printf("Error: Could not wake up the HB process.\n");
+		}
+
+		return 0;
+	}
+
+	// user selected exit program 
+	else if(option == 7)
 	{
 		// exit the program with code 1 
 		printf("---------- Exiting Script ---------\n");

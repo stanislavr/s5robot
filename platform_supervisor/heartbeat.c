@@ -51,9 +51,17 @@ int main(int argc, char* argv[]) {
 				memset(&readFromPort, 0, 10);
 				bytesRead = read(client_socket, &readFromPort, 3);
 				
+				// If we got a response, all good in the hood
 				if(bytesRead > 0) {
 					break;
 				}
+
+				// If we need to shut up then STFU and pretend like it's all good
+				if(stopComFlag) {
+					bytesRead = 1;
+					readFromPort[0] = HB;
+				}
+
 				attempt ++;
 			}
 
