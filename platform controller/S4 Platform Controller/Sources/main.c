@@ -9,6 +9,7 @@
 #include "servo.h"
 #include "dcm.h"
 #include "spi.h"
+#include "adc.h"
 
 unsigned char greeting[] = "Hello World ";
 
@@ -21,6 +22,7 @@ unsigned char lDir;
 unsigned char rSpeed;
 unsigned char rDir;
 unsigned char camPos;
+unsigned char temperature;
 
 volatile unsigned char param1;
 volatile unsigned char param2;
@@ -43,9 +45,9 @@ void main(void) {
   configureDAC();
   configureSCI();
   configureStepper();  
+  configureADC();
   
   LCDprintf("Hello World");
-  //putsSCI(greeting);
 
 	EnableInterrupts;
 	
@@ -61,10 +63,6 @@ void main(void) {
 
         // Home servo.
         setServoPosition(servoLimit_Home);       
-
-        // Acknowledge receipt of command.        
-        //putcSCI(ACK);
-        //putcSCI('A');
         
         // Home stepper.
         homeStepper();
@@ -119,10 +117,7 @@ void main(void) {
         // If all paramters are valid, set the motors speed & direction
         dcmControl(lSpeed, lDir, dcmLeft);  //Set left motor params
         dcmControl(rSpeed, rDir, dcmRight); //Set right motor params
-        
-        // Acknowledge receipt of command.        
-        //putcSCI(ACK);
-        //putcSCI('B');
+
         setHBtimer(); // Delay the heartbeat timer again.
         LCDprintf("lSpd:%i lDir:%i\nrSpd:%i rDir:%i", lSpeed, lDir, rSpeed, rDir);
         break;
@@ -140,11 +135,7 @@ void main(void) {
         if(!(0 <= camPos <= 180)) {
           putcSCI(NAK); //Invalid speed input
           break;
-        }
-        
-        // Acknowledge receipt of command.        
-        //putcSCI(ACK);
-        //putcSCI('C');      
+        }   
         setStepperPos(camPos);
         break;
 
@@ -161,14 +152,26 @@ void main(void) {
         if(!(0 <= camPos <= 180)) {
           putcSCI(NAK); //Invalid speed input
           break;
-        }
-        
-        // Acknowledge receipt of command.        
-        //putcSCI(ACK);
-        //putcSCI('D');      
+        }  
         setServoPosition(camPos);
         break;
         
+      // Case E == Send environmental logger data
+      case 'E':
+        // Turn off heartbeat
+        set_hb_alarm_state(hbOff);
+        
+        // Read temperature from ADC
+        LCDprintf("Reading\ntemperature.");
+        temperature = readADC(ATD5);
+
+        // Send temperature.
+        putcSCI(temperature);                
+        LCDprintf("Temperature:\n%c", temperature);
+        
+        // Re-enable heartbeart
+        set_hb_alarm_state(hbOn);                                  6
+        break;       
       
       // Case S == Set DC motor target speeds
       case 'S':
@@ -185,21 +188,12 @@ void main(void) {
           break;
         }
         
-        LCDprintf("Motor speeds\nset to: %i\n", targetSpeed);
-        
-        // Acknowledge receipt of command.        
-        //putcSCI(ACK);
-        //putcSCI('S');      
+        LCDprintf("Motor speeds\nset to: %i\n", targetSpeed);   
         break;
         
         
       // Case R == Move robot
-      case 'R':
-      
-        // Acknowledge receipt of command.        
-        //putcSCI(ACK);
-        //putcSCI('R');
-        
+      case 'R':       
         LCDprintf("Moving robot\n");
                 
         // Read & check first parameter (move action)
@@ -254,26 +248,10 @@ void main(void) {
           rSpeed = cornerSpeed;
         }
         
-
-        
         dcmControl(lSpeed, lDir, dcmLeft);  //Set left motor params
         dcmControl(rSpeed, rDir, dcmRight); //Set right motor params
         LCDprintf("lSpd:%i lDir:%i\nrSpd:%i rDir:%i", lSpeed, lDir, rSpeed, rDir);
-        
-        //setHBtimer(); // Delay the heartbeat timer again.
-        break;
-
-
-      // Case W == Move webcam
-      case 'W':
-        LCDprintf("Move webcam");
-        
-        // Acknowledge receipt of command.        
-        //putcSCI(ACK);
-        //putcSCI('W');      
-        break;  
-
-  
+        break; 
 
       // Default == Catch all unknown commands        
       default:  // Unknown input.  Return NAK per spec.

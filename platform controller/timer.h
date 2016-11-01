@@ -37,6 +37,8 @@
 
 // Heartbeat constants
 #define hbLimit 100  // For a 1.8s delay, 1800mS / 30mS = 60, so 60 interrupts before alarm triggered for real 
+#define hbOff 0        // Heartbeat alarm turned off
+#define hbOn 1        // Heartbeat alarm turned on
 
 // Function prototypes
 void configureTimer(void);			// Configure the timer module at startup

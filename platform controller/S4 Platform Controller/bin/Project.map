@@ -35,8 +35,8 @@ Entry point: 0xC029 (_Startup)
 _startupData is allocated at 0xC031 and uses 6 Bytes
 extern struct _tagStartup {
   unsigned nofZeroOut     1
-  _Range   pZeroOut       0x900     249
-  _Copy    *toCopyDownBeg 0xD5F3
+  _Range   pZeroOut       0x900     250
+  _Copy    *toCopyDownBeg 0xD654
 } _startupData;
 
 *********************************************************************************************
@@ -46,9 +46,9 @@ Section Name                    Size  Type     From       To       Segment
 .init                             49     R     0xC000     0xC030   ROM_C000
 .startData                        10     R     0xC031     0xC03A   ROM_C000
 .rodata                          116     R     0xC03B     0xC0AE   ROM_C000
-.rodata1                         547     R     0xC0AF     0xC2D1   ROM_C000
-.text                           4532     R     0xC2D2     0xD485   ROM_C000
-.copy                             21     R     0xD5F3     0xD607   ROM_C000
+.rodata1                         580     R     0xC0AF     0xC2F2   ROM_C000
+.text                           4596     R     0xC2F3     0xD4E6   ROM_C000
+.copy                             21     R     0xD654     0xD668   ROM_C000
 .stack                           256   R/W      0x800      0x8FF   RAM
 .data                             15   R/W      0x900      0x90E   RAM
 .abs_section_8                     1   N/I        0x8        0x8   .absSeg0
@@ -282,13 +282,13 @@ Section Name                    Size  Type     From       To       Segment
 .abs_section_ffe4                  2     R     0xFFE4     0xFFE5   .absSeg228
 .abs_section_ffe2                  2     R     0xFFE2     0xFFE3   .absSeg229
 .bss                             218   R/W      0x90F      0x9E8   RAM
-.common                           16   R/W      0x9E9      0x9F8   RAM
-RUNTIME                          365     R     0xD486     0xD5F2   ROM_C000
+.common                           17   R/W      0x9E9      0x9F9   RAM
+RUNTIME                          365     R     0xD4E7     0xD653   ROM_C000
 .vectSeg230_vect                   2     R     0xFFFE     0xFFFF   .vectSeg230
 
 Summary of section sizes per section type:
-READ_ONLY (R):        161C (dec:     5660)
-READ_WRITE (R/W):      1F9 (dec:      505)
+READ_ONLY (R):        167D (dec:     5757)
+READ_WRITE (R/W):      1FA (dec:      506)
 NO_INIT (N/I):         104 (dec:      260)
 
 *********************************************************************************************
@@ -355,7 +355,7 @@ MODULE:                 -- mc9s12c32.c.o --
      _TFLG2                                      4F       1       1       0   .abs_section_4f
      _PACTL                                      60       1       1       0   .abs_section_60
      _PAFLG                                      61       1       1       0   .abs_section_61
-     _ATDSTAT0                                   86       1       1       1   .abs_section_86
+     _ATDSTAT0                                   86       1       1       2   .abs_section_86
      _ATDTEST1                                   89       1       1       0   .abs_section_89
      _ATDSTAT1                                   8B       1       1       0   .abs_section_8b
      _ATDDIEN                                    8D       1       1       1   .abs_section_8d
@@ -503,9 +503,9 @@ MODULE:                 -- mc9s12c32.c.o --
      _TC6                                        5C       2       2       2   .abs_section_5c
      _TC7                                        5E       2       2       3   .abs_section_5e
      _PACNT                                      62       2       2       0   .abs_section_62
-     _ATDCTL23                                   82       2       2       0   .abs_section_82
-     _ATDCTL45                                   84       2       2       0   .abs_section_84
-     _ATDDR0                                     90       2       2       1   .abs_section_90
+     _ATDCTL23                                   82       2       2       2   .abs_section_82
+     _ATDCTL45                                   84       2       2       2   .abs_section_84
+     _ATDDR0                                     90       2       2       2   .abs_section_90
      _ATDDR1                                     92       2       2       0   .abs_section_92
      _ATDDR2                                     94       2       2       0   .abs_section_94
      _ATDDR3                                     96       2       2       0   .abs_section_96
@@ -527,7 +527,9 @@ MODULE:                 -- mc9s12c32.c.o --
      _CANTXTSR                                  17E       2       2       0   .abs_section_17e
 MODULE:                 -- adc.c.o --
 - PROCEDURES:
-     atdHandler                                C2D2      25      37       1   .text       
+     readADC                                   C2F3       9       9       1   .text       
+     configureADC                              C2FC       C      12       1   .text       
+     atdHandler                                C308      25      37       1   .text       
 - VARIABLES:
      analogIn                                   90F       1       1       2   .bss        
      analogCount                                910       1       1       2   .bss        
@@ -535,11 +537,11 @@ MODULE:                 -- adc.c.o --
      _Vector_22                                FFD2       2       2       0   .abs_section_ffd2
 MODULE:                 -- dcm.c.o --
 - PROCEDURES:
-     configureDCM                              C2F7      52      82       1   .text       
-     dcmControl                                C349      7A     122       2   .text       
-     speed_mms                                 C3C3      15      21       2   .text       
-     getTargetSpeedA                           C3D8       9       9       1   .text       
-     getTargetSpeedB                           C3E1       9       9       1   .text       
+     configureDCM                              C32D      52      82       1   .text       
+     dcmControl                                C37F      7A     122       2   .text       
+     speed_mms                                 C3F9      15      21       2   .text       
+     getTargetSpeedA                           C40E       9       9       1   .text       
+     getTargetSpeedB                           C417       9       9       1   .text       
 - VARIABLES:
      STRING.Configuring.DC.Motor.1             C0AF      17      23       1   .rodata1    
      STRING.DC.Motors.Configured.2             C0C6      16      22       1   .rodata1    
@@ -550,17 +552,17 @@ MODULE:                 -- dcm.c.o --
      speed.3                                    977       1       1       1   .bss        
 MODULE:                 -- lcd.c.o --
 - PROCEDURES:
-     configureLCD                              C3EA      59      89       1   .text       
-     LCDdata                                   C443      36      54       1   .text       
-     LCDcmd                                    C479      36      54       7   .text       
-     LCDputs                                   C4AF      29      41       2   .text       
-     LCDprintf                                 C4D8      1C      28      21   .text       
+     configureLCD                              C420      59      89       1   .text       
+     LCDdata                                   C479      36      54       1   .text       
+     LCDcmd                                    C4AF      36      54       7   .text       
+     LCDputs                                   C4E5      29      41       2   .text       
+     LCDprintf                                 C50E      1C      28      23   .text       
 - VARIABLES:
 MODULE:                 -- servo.c.o --
 - PROCEDURES:
-     configureServo                            C4F4      34      52       2   .text       
-     timer2handler                             C528      27      39       1   .text       
-     setServoPosition                          C54F      26      38       3   .text       
+     configureServo                            C52A      34      52       2   .text       
+     timer2handler                             C55E      27      39       1   .text       
+     setServoPosition                          C585      26      38       3   .text       
 - VARIABLES:
      STRING.Configuring.servo..1               C0DC      13      19       1   .rodata1    
      STRING.Servo.Set.to...i.deg.2             C0EF      1A      26       1   .rodata1    
@@ -570,10 +572,10 @@ MODULE:                 -- servo.c.o --
      _Vector_10                                FFEA       2       2       0   .abs_section_ffea
 MODULE:                 -- sci.c.o --
 - PROCEDURES:
-     configureSCI                              C575      13      19       1   .text       
-     putcSCI                                   C588       9       9       2   .text       
-     sciHandler                                C591      67     103       1   .text       
-     consumeSCI                                C5F8      29      41       7   .text       
+     configureSCI                              C5AB      13      19       1   .text       
+     putcSCI                                   C5BE       9       9       3   .text       
+     sciHandler                                C5C7      67     103       1   .text       
+     consumeSCI                                C62E      29      41       7   .text       
 - VARIABLES:
      STRING.SCI.Configured.1                   C109       F      15       1   .rodata1    
      STRING.RS232.Buffer.Full....4             C118      15      21       1   .rodata1    
@@ -587,13 +589,13 @@ MODULE:                 -- sci.c.o --
      _Vector_20                                FFD6       2       2       0   .abs_section_ffd6
 MODULE:                 -- stepper.c.o --
 - PROCEDURES:
-     timer4handler                             C621      52      82       1   .text       
-     setStepperSpeed                           C673       9       9       2   .text       
-     homeStepper                               C67C      56      86       2   .text       
-     configureStepper                          C6D2      44      68       1   .text       
-     moveStepper                               C716      17      23       1   .text       
-     getStepperPosition                        C72D       B      11       1   .text       
-     setStepperPos                             C738      49      73       1   .text       
+     timer4handler                             C657      52      82       1   .text       
+     setStepperSpeed                           C6A9       9       9       2   .text       
+     homeStepper                               C6B2      56      86       2   .text       
+     configureStepper                          C708      44      68       1   .text       
+     moveStepper                               C74C      17      23       1   .text       
+     getStepperPosition                        C763       B      11       1   .text       
+     setStepperPos                             C76E      49      73       1   .text       
 - VARIABLES:
      STRING.GO.HOME.STEPPER.1                  C12D      10      16       1   .rodata1    
      STRING.I.AM.HOME..Love.Step.2             C13D      18      24       1   .rodata1    
@@ -613,21 +615,21 @@ MODULE:                 -- stepper.c.o --
      _Vector_12                                FFE6       2       2       0   .abs_section_ffe6
 MODULE:                 -- timer.c.o --
 - PROCEDURES:
-     configureTimer                            C781       8       8       1   .text       
-     msDelay                                   C789      2B      43       5   .text       
-     timer0Handler                             C7B4      6A     106       1   .text       
-     timer1Handler                             C81E      6A     106       1   .text       
-     timerOverflowHandler                      C888       6       6       1   .text       
-     configureHB                               C88E      11      17       1   .text       
-     timer5Handler                             C89F      45      69       1   .text       
-     setHBtimer                                C8E4      1A      26       2   .text       
-     set_hb_alarm_state                        C8FE       8       8       2   .text       
-     configureMotorControl                     C906      11      17       1   .text       
-     timer6Handler                             C917      E2     226       3   .text       
+     configureTimer                            C7B7       8       8       1   .text       
+     msDelay                                   C7BF      2B      43       5   .text       
+     timer0Handler                             C7EA      6A     106       1   .text       
+     timer1Handler                             C854      6A     106       1   .text       
+     timerOverflowHandler                      C8BE       6       6       1   .text       
+     configureHB                               C8C4      11      17       1   .text       
+     timer5Handler                             C8D5      45      69       1   .text       
+     setHBtimer                                C91A      1A      26       2   .text       
+     set_hb_alarm_state                        C934       8       8       4   .text       
+     configureMotorControl                     C93C      11      17       1   .text       
+     timer6Handler                             C94D      E2     226       3   .text       
 - VARIABLES:
      STRING.Lost.heartbeat...3                 C16D      11      17       1   .rodata1    
      STRING.He.s.dead.Jim..Lost..4             C17E      1F      31       1   .rodata1    
-     STRING.Heartbeat.enabled..5               C19D      13      19       1   .rodata1    
+     STRING.He.s.alive..Got.hear.5             C19D      1B      27       1   .rodata1    
      gainP                                      90C       1       1       1   .data       
      gainI                                      90D       1       1       1   .data       
      hb_alarm_state                             9A9       1       1       3   .bss        
@@ -662,28 +664,29 @@ MODULE:                 -- timer.c.o --
      _Vector_14                                FFE2       2       2       0   .abs_section_ffe2
 MODULE:                 -- main.c.o --
 - PROCEDURES:
-     main                                      C9F9     2B0     688      25   .text       
+     main                                      CA2F     2DB     731      25   .text       
 - VARIABLES:
-     STRING.Hello.World.2                      C1B0       C      12       1   .rodata1    
-     STRING.Go.home.Camera..3                  C1BC      10      16       1   .rodata1    
-     STRING.Camera.is.home..4                  C1CC      10      16       1   .rodata1    
-     STRING.Processing.dcmParams.5             C1DC      15      21       1   .rodata1    
-     STRING..c.c.c.6                           C1F1       7       7       1   .rodata1    
-     STRING..c.7                               C1F8       3       3       1   .rodata1    
-     STRING..c.c.c.8                           C1FB       7       7       1   .rodata1    
-     STRING..c.9                               C202       3       3       1   .rodata1    
-     STRING.lSpd..i.lDir..i.rSpd.10            C205      20      32       1   .rodata1    
-     STRING.Processing.camera.pa.11            C225      16      22       1   .rodata1    
-     STRING..c.c.c.12                          C23B       7       7       1   .rodata1    
-     STRING.Processing.camera.ti.13            C242      17      23       1   .rodata1    
-     STRING..c.c.c.14                          C259       7       7       1   .rodata1    
-     STRING.Setting.motor.speeds.15            C260      15      21       1   .rodata1    
-     STRING..c.c.c.16                          C275       7       7       1   .rodata1    
-     STRING.Motor.speeds.set.to..17            C27C      19      25       1   .rodata1    
-     STRING.Moving.robot..18                   C295       E      14       1   .rodata1    
-     STRING..c.19                              C2A3       3       3       1   .rodata1    
-     STRING.lSpd..i.lDir..i.rSpd.20            C2A6      20      32       1   .rodata1    
-     STRING.Move.webcam.21                     C2C6       C      12       1   .rodata1    
+     STRING.Hello.World.2                      C1B8       C      12       1   .rodata1    
+     STRING.Go.home.Camera..3                  C1C4      10      16       1   .rodata1    
+     STRING.Camera.is.home..4                  C1D4      10      16       1   .rodata1    
+     STRING.Processing.dcmParams.5             C1E4      15      21       1   .rodata1    
+     STRING..c.c.c.6                           C1F9       7       7       1   .rodata1    
+     STRING..c.7                               C200       3       3       1   .rodata1    
+     STRING..c.c.c.8                           C203       7       7       1   .rodata1    
+     STRING..c.9                               C20A       3       3       1   .rodata1    
+     STRING.lSpd..i.lDir..i.rSpd.10            C20D      20      32       1   .rodata1    
+     STRING.Processing.camera.pa.11            C22D      16      22       1   .rodata1    
+     STRING..c.c.c.12                          C243       7       7       1   .rodata1    
+     STRING.Processing.camera.ti.13            C24A      17      23       1   .rodata1    
+     STRING..c.c.c.14                          C261       7       7       1   .rodata1    
+     STRING.Reading.temperature..15            C268      15      21       1   .rodata1    
+     STRING.Temperature...c.16                 C27D      10      16       1   .rodata1    
+     STRING.Setting.motor.speeds.17            C28D      15      21       1   .rodata1    
+     STRING..c.c.c.18                          C2A2       7       7       1   .rodata1    
+     STRING.Motor.speeds.set.to..19            C2A9      19      25       1   .rodata1    
+     STRING.Moving.robot..20                   C2C2       E      14       1   .rodata1    
+     STRING..c.21                              C2D0       3       3       1   .rodata1    
+     STRING.lSpd..i.lDir..i.rSpd.22            C2D3      20      32       1   .rodata1    
      targetSpeed                                90E       1       1       3   .data       
      speedBuf                                   9E9       3       3       6   .common     
      dirBuf                                     9EC       2       2       5   .common     
@@ -693,9 +696,10 @@ MODULE:                 -- main.c.o --
      rSpeed                                     9F1       1       1       5   .common     
      rDir                                       9F2       1       1       8   .common     
      camPos                                     9F3       1       1       2   .common     
-     param1                                     9F4       1       1       6   .common     
-     param2                                     9F5       1       1       6   .common     
-     param3                                     9F6       1       1       2   .common     
+     temperature                                9F4       1       1       2   .common     
+     param1                                     9F5       1       1       6   .common     
+     param2                                     9F6       1       1       6   .common     
+     param3                                     9F7       1       1       2   .common     
 MODULE:                 -- Start12.c.o --
 - PROCEDURES:
      Init                                      C000      29      41       1   .init       
@@ -706,17 +710,17 @@ MODULE:                 -- Start12.c.o --
      __SEG_END_SSTACK                           900       0       0       1               
 MODULE:                 -- CTYPE.C.o (ansisi.lib) --
 - PROCEDURES:
-     isdigit                                   CCA9       E      14       1   .text       
-     isspace                                   CCB7      17      23       2   .text       
-     toupper                                   CCCE      14      20       3   .text       
+     isdigit                                   CD0A       E      14       1   .text       
+     isspace                                   CD18      17      23       2   .text       
+     toupper                                   CD2F      14      20       3   .text       
 - VARIABLES:
 MODULE:                 -- PRINTF.C.o (ansisi.lib) --
 - PROCEDURES:
-     vprintf                                   CCE2     478    1144      50   .text       
-     _out                                      D15A       C      12       9   .text       
-     deposit_char                              D166       F      15       2   .text       
-     sprintf                                   D175      29      41       8   .text       
-     vsprintf                                  D19E      29      41       1   .text       
+     vprintf                                   CD43     478    1144      50   .text       
+     _out                                      D1BB       C      12       9   .text       
+     deposit_char                              D1C7       F      15       2   .text       
+     sprintf                                   D1D6      29      41       8   .text       
+     vsprintf                                  D1FF      29      41       1   .text       
 - VARIABLES:
      pow10                                     C03B      28      40       4   .rodata     
      pow16                                     C063      20      32       4   .rodata     
@@ -724,31 +728,31 @@ MODULE:                 -- PRINTF.C.o (ansisi.lib) --
      pbuf                                       9E2       6       6      21   .bss        
 MODULE:                 -- STDLIB.C.o (ansisi.lib) --
 - PROCEDURES:
-     CheckCharWithBase                         D1C7      39      57       1   .text       
-     _strtoul                                  D200     170     368       8   .text       
-     _strtol                                   D370      D0     208       3   .text       
-     strtol                                    D440      13      19       2   .text       
+     CheckCharWithBase                         D228      39      57       1   .text       
+     _strtoul                                  D261     170     368       8   .text       
+     _strtol                                   D3D1      D0     208       3   .text       
+     strtol                                    D4A1      13      19       2   .text       
 - VARIABLES:
 MODULE:                 -- rtshc12.c.o (ansisi.lib) --
 - PROCEDURES:
-     _LCMP_P                                   D486      15      21       4   RUNTIME     
-     _LNEG                                     D49B       D      13       3   RUNTIME     
-     _LMULU16x32                               D4A8       F      15       1   RUNTIME     
-     _LMULS16x32                               D4B7      1F      31       1   RUNTIME     
-     _lDivMod                                  D4D6      BE     190       1   RUNTIME     
-     _LDIVU                                    D594       E      14       2   RUNTIME     
-     _ILSEXT                                   D5A2       7       7       7   RUNTIME     
-     _CASE_DIRECT_BYTE                         D5A9       5       5       2   RUNTIME     
-     _CASE_CHECKED_BYTE                        D5AE      14      20       2   RUNTIME     
-     _CASE_SEARCH_8                            D5C2      17      23       2   RUNTIME     
-     _CASE_SEARCH_8_BYTE                       D5D9      1A      26       1   RUNTIME     
+     _LCMP_P                                   D4E7      15      21       4   RUNTIME     
+     _LNEG                                     D4FC       D      13       3   RUNTIME     
+     _LMULU16x32                               D509       F      15       1   RUNTIME     
+     _LMULS16x32                               D518      1F      31       1   RUNTIME     
+     _lDivMod                                  D537      BE     190       1   RUNTIME     
+     _LDIVU                                    D5F5       E      14       2   RUNTIME     
+     _ILSEXT                                   D603       7       7       7   RUNTIME     
+     _CASE_DIRECT_BYTE                         D60A       5       5       1   RUNTIME     
+     _CASE_CHECKED_BYTE                        D60F      14      20       2   RUNTIME     
+     _CASE_SEARCH_8                            D623      17      23       1   RUNTIME     
+     _CASE_SEARCH_8_BYTE                       D63A      1A      26       1   RUNTIME     
 - VARIABLES:
-     errno                                      9F7       2       2       2   .common     
+     errno                                      9F8       2       2       2   .common     
 MODULE:                 -- spi.c.o --
 - PROCEDURES:
-     configureSPI                              D453       F      15       1   .text       
-     putcSPI                                   D462      14      20       2   .text       
-     configureDAC                              D476      10      16       1   .text       
+     configureSPI                              D4B4       F      15       1   .text       
+     putcSPI                                   D4C3      14      20       2   .text       
+     configureDAC                              D4D7      10      16       1   .text       
 - VARIABLES:
      temp.1                                     9E8       1       1       1   .bss        
 
@@ -757,14 +761,14 @@ MODULE STATISTIC
   Name                                      Data   Code  Const
 ---------------------------------------------------------------------------------------------
   mc9s12c32.c.o                              260      0      0
-  adc.c.o                                    102     37      2
+  adc.c.o                                    102     58      2
   dcm.c.o                                      5    243     45
   lcd.c.o                                      0    266      0
   servo.c.o                                    5    129     47
   sci.c.o                                     26    172     38
   stepper.c.o                                 28    352     66
-  timer.c.o                                   59    632     77
-  main.c.o                                    15    688    290
+  timer.c.o                                   59    632     85
+  main.c.o                                    16    731    315
   Start12.c.o                                  0     49      0
   CTYPE.C.o (ansisi.lib)                       0     57      0
   PRINTF.C.o (ansisi.lib)                      6   1253    116
@@ -777,15 +781,15 @@ MODULE STATISTIC
 SECTION USE IN OBJECT-ALLOCATION SECTION
 ---------------------------------------------------------------------------------------------
 SECTION: ".text"
-  atdHandler configureDCM dcmControl speed_mms getTargetSpeedA getTargetSpeedB 
-  configureLCD LCDdata LCDcmd LCDputs LCDprintf configureServo timer2handler 
-  setServoPosition configureSCI putcSCI sciHandler consumeSCI timer4handler 
-  setStepperSpeed homeStepper configureStepper moveStepper getStepperPosition 
-  setStepperPos configureTimer msDelay timer0Handler timer1Handler 
-  timerOverflowHandler configureHB timer5Handler setHBtimer set_hb_alarm_state 
-  configureMotorControl timer6Handler main isdigit isspace toupper vprintf _out 
-  deposit_char sprintf vsprintf CheckCharWithBase _strtoul _strtol strtol 
-  configureSPI putcSPI configureDAC 
+  readADC configureADC atdHandler configureDCM dcmControl speed_mms 
+  getTargetSpeedA getTargetSpeedB configureLCD LCDdata LCDcmd LCDputs LCDprintf 
+  configureServo timer2handler setServoPosition configureSCI putcSCI sciHandler 
+  consumeSCI timer4handler setStepperSpeed homeStepper configureStepper 
+  moveStepper getStepperPosition setStepperPos configureTimer msDelay 
+  timer0Handler timer1Handler timerOverflowHandler configureHB timer5Handler 
+  setHBtimer set_hb_alarm_state configureMotorControl timer6Handler main 
+  isdigit isspace toupper vprintf _out deposit_char sprintf vsprintf 
+  CheckCharWithBase _strtoul _strtol strtol configureSPI putcSPI configureDAC 
 SECTION: ".data"
   targetA targetB pTable steps2move gainP gainI targetSpeed 
 SECTION: ".bss"
@@ -806,14 +810,15 @@ SECTION: ".rodata1"
   STRING.SCI.Configured.1 STRING.RS232.Buffer.Full....4 
   STRING.GO.HOME.STEPPER.1 STRING.I.AM.HOME..Love.Step.2 
   STRING.Panning.to....i.degr.7 STRING.Lost.heartbeat...3 
-  STRING.He.s.dead.Jim..Lost..4 STRING.Heartbeat.enabled..5 
+  STRING.He.s.dead.Jim..Lost..4 STRING.He.s.alive..Got.hear.5 
   STRING.Hello.World.2 STRING.Go.home.Camera..3 STRING.Camera.is.home..4 
   STRING.Processing.dcmParams.5 STRING..c.c.c.6 STRING..c.7 STRING..c.c.c.8 
   STRING..c.9 STRING.lSpd..i.lDir..i.rSpd.10 STRING.Processing.camera.pa.11 
   STRING..c.c.c.12 STRING.Processing.camera.ti.13 STRING..c.c.c.14 
-  STRING.Setting.motor.speeds.15 STRING..c.c.c.16 
-  STRING.Motor.speeds.set.to..17 STRING.Moving.robot..18 STRING..c.19 
-  STRING.lSpd..i.lDir..i.rSpd.20 STRING.Move.webcam.21 
+  STRING.Reading.temperature..15 STRING.Temperature...c.16 
+  STRING.Setting.motor.speeds.17 STRING..c.c.c.18 
+  STRING.Motor.speeds.set.to..19 STRING.Moving.robot..20 STRING..c.21 
+  STRING.lSpd..i.lDir..i.rSpd.22 
 SECTION: ".abs_section_8"
   _PORTE 
 SECTION: ".abs_section_9"
@@ -1275,8 +1280,8 @@ SECTION: ".abs_section_ffe4"
 SECTION: ".abs_section_ffe2"
   _Vector_14 
 SECTION: ".common"
-  speedBuf dirBuf moveAction lSpeed lDir rSpeed rDir camPos param1 param2 
-  param3 errno 
+  speedBuf dirBuf moveAction lSpeed lDir rSpeed rDir camPos temperature param1 
+  param2 param3 errno 
 SECTION: "RUNTIME"
   _LCMP_P _LNEG _LMULU16x32 _LMULS16x32 _lDivMod _LDIVU _ILSEXT 
   _CASE_DIRECT_BYTE _CASE_CHECKED_BYTE _CASE_SEARCH_8 _CASE_SEARCH_8_BYTE 
@@ -1353,14 +1358,14 @@ OBJECT LIST SORTED BY ADDRESS
      _PACTL                                      60       1       1       0   .abs_section_60
      _PAFLG                                      61       1       1       0   .abs_section_61
      _PACNT                                      62       2       2       0   .abs_section_62
-     _ATDCTL23                                   82       2       2       0   .abs_section_82
-     _ATDCTL45                                   84       2       2       0   .abs_section_84
-     _ATDSTAT0                                   86       1       1       1   .abs_section_86
+     _ATDCTL23                                   82       2       2       2   .abs_section_82
+     _ATDCTL45                                   84       2       2       2   .abs_section_84
+     _ATDSTAT0                                   86       1       1       2   .abs_section_86
      _ATDTEST1                                   89       1       1       0   .abs_section_89
      _ATDSTAT1                                   8B       1       1       0   .abs_section_8b
      _ATDDIEN                                    8D       1       1       1   .abs_section_8d
      _PORTAD0                                    8F       1       1       0   .abs_section_8f
-     _ATDDR0                                     90       2       2       1   .abs_section_90
+     _ATDDR0                                     90       2       2       2   .abs_section_90
      _ATDDR1                                     92       2       2       0   .abs_section_92
      _ATDDR2                                     94       2       2       0   .abs_section_94
      _ATDDR3                                     96       2       2       0   .abs_section_96
@@ -1574,10 +1579,11 @@ OBJECT LIST SORTED BY ADDRESS
      rSpeed                                     9F1       1       1       5   .common     
      rDir                                       9F2       1       1       8   .common     
      camPos                                     9F3       1       1       2   .common     
-     param1                                     9F4       1       1       6   .common     
-     param2                                     9F5       1       1       6   .common     
-     param3                                     9F6       1       1       2   .common     
-     errno                                      9F7       2       2       2   .common     
+     temperature                                9F4       1       1       2   .common     
+     param1                                     9F5       1       1       6   .common     
+     param2                                     9F6       1       1       6   .common     
+     param3                                     9F7       1       1       2   .common     
+     errno                                      9F8       2       2       2   .common     
      Init                                      C000      29      41       1   .init       
      _Startup                                  C029       8       8       0   .init       
      pow10                                     C03B      28      40       4   .rodata     
@@ -1594,90 +1600,93 @@ OBJECT LIST SORTED BY ADDRESS
      STRING.Panning.to....i.degr.7             C155      18      24       1   .rodata1    
      STRING.Lost.heartbeat...3                 C16D      11      17       1   .rodata1    
      STRING.He.s.dead.Jim..Lost..4             C17E      1F      31       1   .rodata1    
-     STRING.Heartbeat.enabled..5               C19D      13      19       1   .rodata1    
-     STRING.Hello.World.2                      C1B0       C      12       1   .rodata1    
-     STRING.Go.home.Camera..3                  C1BC      10      16       1   .rodata1    
-     STRING.Camera.is.home..4                  C1CC      10      16       1   .rodata1    
-     STRING.Processing.dcmParams.5             C1DC      15      21       1   .rodata1    
-     STRING..c.c.c.6                           C1F1       7       7       1   .rodata1    
-     STRING..c.7                               C1F8       3       3       1   .rodata1    
-     STRING..c.c.c.8                           C1FB       7       7       1   .rodata1    
-     STRING..c.9                               C202       3       3       1   .rodata1    
-     STRING.lSpd..i.lDir..i.rSpd.10            C205      20      32       1   .rodata1    
-     STRING.Processing.camera.pa.11            C225      16      22       1   .rodata1    
-     STRING..c.c.c.12                          C23B       7       7       1   .rodata1    
-     STRING.Processing.camera.ti.13            C242      17      23       1   .rodata1    
-     STRING..c.c.c.14                          C259       7       7       1   .rodata1    
-     STRING.Setting.motor.speeds.15            C260      15      21       1   .rodata1    
-     STRING..c.c.c.16                          C275       7       7       1   .rodata1    
-     STRING.Motor.speeds.set.to..17            C27C      19      25       1   .rodata1    
-     STRING.Moving.robot..18                   C295       E      14       1   .rodata1    
-     STRING..c.19                              C2A3       3       3       1   .rodata1    
-     STRING.lSpd..i.lDir..i.rSpd.20            C2A6      20      32       1   .rodata1    
-     STRING.Move.webcam.21                     C2C6       C      12       1   .rodata1    
-     atdHandler                                C2D2      25      37       1   .text       
-     configureDCM                              C2F7      52      82       1   .text       
-     dcmControl                                C349      7A     122       2   .text       
-     speed_mms                                 C3C3      15      21       2   .text       
-     getTargetSpeedA                           C3D8       9       9       1   .text       
-     getTargetSpeedB                           C3E1       9       9       1   .text       
-     configureLCD                              C3EA      59      89       1   .text       
-     LCDdata                                   C443      36      54       1   .text       
-     LCDcmd                                    C479      36      54       7   .text       
-     LCDputs                                   C4AF      29      41       2   .text       
-     LCDprintf                                 C4D8      1C      28      21   .text       
-     configureServo                            C4F4      34      52       2   .text       
-     timer2handler                             C528      27      39       1   .text       
-     setServoPosition                          C54F      26      38       3   .text       
-     configureSCI                              C575      13      19       1   .text       
-     putcSCI                                   C588       9       9       2   .text       
-     sciHandler                                C591      67     103       1   .text       
-     consumeSCI                                C5F8      29      41       7   .text       
-     timer4handler                             C621      52      82       1   .text       
-     setStepperSpeed                           C673       9       9       2   .text       
-     homeStepper                               C67C      56      86       2   .text       
-     configureStepper                          C6D2      44      68       1   .text       
-     moveStepper                               C716      17      23       1   .text       
-     getStepperPosition                        C72D       B      11       1   .text       
-     setStepperPos                             C738      49      73       1   .text       
-     configureTimer                            C781       8       8       1   .text       
-     msDelay                                   C789      2B      43       5   .text       
-     timer0Handler                             C7B4      6A     106       1   .text       
-     timer1Handler                             C81E      6A     106       1   .text       
-     timerOverflowHandler                      C888       6       6       1   .text       
-     configureHB                               C88E      11      17       1   .text       
-     timer5Handler                             C89F      45      69       1   .text       
-     setHBtimer                                C8E4      1A      26       2   .text       
-     set_hb_alarm_state                        C8FE       8       8       2   .text       
-     configureMotorControl                     C906      11      17       1   .text       
-     timer6Handler                             C917      E2     226       3   .text       
-     main                                      C9F9     2B0     688      25   .text       
-     isdigit                                   CCA9       E      14       1   .text       
-     isspace                                   CCB7      17      23       2   .text       
-     toupper                                   CCCE      14      20       3   .text       
-     vprintf                                   CCE2     478    1144      50   .text       
-     _out                                      D15A       C      12       9   .text       
-     deposit_char                              D166       F      15       2   .text       
-     sprintf                                   D175      29      41       8   .text       
-     vsprintf                                  D19E      29      41       1   .text       
-     CheckCharWithBase                         D1C7      39      57       1   .text       
-     _strtoul                                  D200     170     368       8   .text       
-     _strtol                                   D370      D0     208       3   .text       
-     strtol                                    D440      13      19       2   .text       
-     configureSPI                              D453       F      15       1   .text       
-     putcSPI                                   D462      14      20       2   .text       
-     configureDAC                              D476      10      16       1   .text       
-     _LCMP_P                                   D486      15      21       4   RUNTIME     
-     _LNEG                                     D49B       D      13       3   RUNTIME     
-     _LMULU16x32                               D4A8       F      15       1   RUNTIME     
-     _LMULS16x32                               D4B7      1F      31       1   RUNTIME     
-     _lDivMod                                  D4D6      BE     190       1   RUNTIME     
-     _LDIVU                                    D594       E      14       2   RUNTIME     
-     _ILSEXT                                   D5A2       7       7       7   RUNTIME     
-     _CASE_DIRECT_BYTE                         D5A9       5       5       2   RUNTIME     
-     _CASE_CHECKED_BYTE                        D5AE      14      20       2   RUNTIME     
-     _CASE_SEARCH_8                            D5C2      17      23       2   RUNTIME     
-     _CASE_SEARCH_8_BYTE                       D5D9      1A      26       1   RUNTIME     
+     STRING.He.s.alive..Got.hear.5             C19D      1B      27       1   .rodata1    
+     STRING.Hello.World.2                      C1B8       C      12       1   .rodata1    
+     STRING.Go.home.Camera..3                  C1C4      10      16       1   .rodata1    
+     STRING.Camera.is.home..4                  C1D4      10      16       1   .rodata1    
+     STRING.Processing.dcmParams.5             C1E4      15      21       1   .rodata1    
+     STRING..c.c.c.6                           C1F9       7       7       1   .rodata1    
+     STRING..c.7                               C200       3       3       1   .rodata1    
+     STRING..c.c.c.8                           C203       7       7       1   .rodata1    
+     STRING..c.9                               C20A       3       3       1   .rodata1    
+     STRING.lSpd..i.lDir..i.rSpd.10            C20D      20      32       1   .rodata1    
+     STRING.Processing.camera.pa.11            C22D      16      22       1   .rodata1    
+     STRING..c.c.c.12                          C243       7       7       1   .rodata1    
+     STRING.Processing.camera.ti.13            C24A      17      23       1   .rodata1    
+     STRING..c.c.c.14                          C261       7       7       1   .rodata1    
+     STRING.Reading.temperature..15            C268      15      21       1   .rodata1    
+     STRING.Temperature...c.16                 C27D      10      16       1   .rodata1    
+     STRING.Setting.motor.speeds.17            C28D      15      21       1   .rodata1    
+     STRING..c.c.c.18                          C2A2       7       7       1   .rodata1    
+     STRING.Motor.speeds.set.to..19            C2A9      19      25       1   .rodata1    
+     STRING.Moving.robot..20                   C2C2       E      14       1   .rodata1    
+     STRING..c.21                              C2D0       3       3       1   .rodata1    
+     STRING.lSpd..i.lDir..i.rSpd.22            C2D3      20      32       1   .rodata1    
+     readADC                                   C2F3       9       9       1   .text       
+     configureADC                              C2FC       C      12       1   .text       
+     atdHandler                                C308      25      37       1   .text       
+     configureDCM                              C32D      52      82       1   .text       
+     dcmControl                                C37F      7A     122       2   .text       
+     speed_mms                                 C3F9      15      21       2   .text       
+     getTargetSpeedA                           C40E       9       9       1   .text       
+     getTargetSpeedB                           C417       9       9       1   .text       
+     configureLCD                              C420      59      89       1   .text       
+     LCDdata                                   C479      36      54       1   .text       
+     LCDcmd                                    C4AF      36      54       7   .text       
+     LCDputs                                   C4E5      29      41       2   .text       
+     LCDprintf                                 C50E      1C      28      23   .text       
+     configureServo                            C52A      34      52       2   .text       
+     timer2handler                             C55E      27      39       1   .text       
+     setServoPosition                          C585      26      38       3   .text       
+     configureSCI                              C5AB      13      19       1   .text       
+     putcSCI                                   C5BE       9       9       3   .text       
+     sciHandler                                C5C7      67     103       1   .text       
+     consumeSCI                                C62E      29      41       7   .text       
+     timer4handler                             C657      52      82       1   .text       
+     setStepperSpeed                           C6A9       9       9       2   .text       
+     homeStepper                               C6B2      56      86       2   .text       
+     configureStepper                          C708      44      68       1   .text       
+     moveStepper                               C74C      17      23       1   .text       
+     getStepperPosition                        C763       B      11       1   .text       
+     setStepperPos                             C76E      49      73       1   .text       
+     configureTimer                            C7B7       8       8       1   .text       
+     msDelay                                   C7BF      2B      43       5   .text       
+     timer0Handler                             C7EA      6A     106       1   .text       
+     timer1Handler                             C854      6A     106       1   .text       
+     timerOverflowHandler                      C8BE       6       6       1   .text       
+     configureHB                               C8C4      11      17       1   .text       
+     timer5Handler                             C8D5      45      69       1   .text       
+     setHBtimer                                C91A      1A      26       2   .text       
+     set_hb_alarm_state                        C934       8       8       4   .text       
+     configureMotorControl                     C93C      11      17       1   .text       
+     timer6Handler                             C94D      E2     226       3   .text       
+     main                                      CA2F     2DB     731      25   .text       
+     isdigit                                   CD0A       E      14       1   .text       
+     isspace                                   CD18      17      23       2   .text       
+     toupper                                   CD2F      14      20       3   .text       
+     vprintf                                   CD43     478    1144      50   .text       
+     _out                                      D1BB       C      12       9   .text       
+     deposit_char                              D1C7       F      15       2   .text       
+     sprintf                                   D1D6      29      41       8   .text       
+     vsprintf                                  D1FF      29      41       1   .text       
+     CheckCharWithBase                         D228      39      57       1   .text       
+     _strtoul                                  D261     170     368       8   .text       
+     _strtol                                   D3D1      D0     208       3   .text       
+     strtol                                    D4A1      13      19       2   .text       
+     configureSPI                              D4B4       F      15       1   .text       
+     putcSPI                                   D4C3      14      20       2   .text       
+     configureDAC                              D4D7      10      16       1   .text       
+     _LCMP_P                                   D4E7      15      21       4   RUNTIME     
+     _LNEG                                     D4FC       D      13       3   RUNTIME     
+     _LMULU16x32                               D509       F      15       1   RUNTIME     
+     _LMULS16x32                               D518      1F      31       1   RUNTIME     
+     _lDivMod                                  D537      BE     190       1   RUNTIME     
+     _LDIVU                                    D5F5       E      14       2   RUNTIME     
+     _ILSEXT                                   D603       7       7       7   RUNTIME     
+     _CASE_DIRECT_BYTE                         D60A       5       5       1   RUNTIME     
+     _CASE_CHECKED_BYTE                        D60F      14      20       2   RUNTIME     
+     _CASE_SEARCH_8                            D623      17      23       1   RUNTIME     
+     _CASE_SEARCH_8_BYTE                       D63A      1A      26       1   RUNTIME     
      _Vector_22                                FFD2       2       2       0   .abs_section_ffd2
      _Vector_20                                FFD6       2       2       0   .abs_section_ffd6
      _Vector_16                                FFDE       2       2       0   .abs_section_ffde
@@ -1693,7 +1702,7 @@ UNUSED-OBJECTS SECTION
 ---------------------------------------------------------------------------------------------
 NOT USED PROCEDURES
 adc.c.o:
-  readADC configureADC configureADC_IE atdConsume 
+  configureADC_IE atdConsume 
 dcm.c.o:
   setTargetSpeedA setTargetSpeedB 
 servo.c.o:
@@ -1739,31 +1748,31 @@ rtshc12.c.o (ansisi.lib):
 *********************************************************************************************
 COPYDOWN SECTION
 ---------------------------------------------------------------------------------------------
-------- ROM-ADDRESS: 0xD5F3 ---- SIZE       4 ---
+------- ROM-ADDRESS: 0xD654 ---- SIZE       4 ---
 Filling bytes inserted
  000F0900
-------- ROM-ADDRESS: 0xD5F7 ---- RAM-ADDRESS: 0x900 ---- SIZE       1 ---
+------- ROM-ADDRESS: 0xD658 ---- RAM-ADDRESS: 0x900 ---- SIZE       1 ---
 Name of initialized Object : targetA
  32
-------- ROM-ADDRESS: 0xD5F8 ---- RAM-ADDRESS: 0x901 ---- SIZE       1 ---
+------- ROM-ADDRESS: 0xD659 ---- RAM-ADDRESS: 0x901 ---- SIZE       1 ---
 Name of initialized Object : targetB
  32
-------- ROM-ADDRESS: 0xD5F9 ---- RAM-ADDRESS: 0x902 ---- SIZE       8 ---
+------- ROM-ADDRESS: 0xD65A ---- RAM-ADDRESS: 0x902 ---- SIZE       8 ---
 Name of initialized Object : pTable
  80A0206040 501090
-------- ROM-ADDRESS: 0xD601 ---- RAM-ADDRESS: 0x90A ---- SIZE       2 ---
+------- ROM-ADDRESS: 0xD662 ---- RAM-ADDRESS: 0x90A ---- SIZE       2 ---
 Name of initialized Object : steps2move
  FFFF
-------- ROM-ADDRESS: 0xD603 ---- RAM-ADDRESS: 0x90C ---- SIZE       1 ---
+------- ROM-ADDRESS: 0xD664 ---- RAM-ADDRESS: 0x90C ---- SIZE       1 ---
 Name of initialized Object : gainP
  02
-------- ROM-ADDRESS: 0xD604 ---- RAM-ADDRESS: 0x90D ---- SIZE       1 ---
+------- ROM-ADDRESS: 0xD665 ---- RAM-ADDRESS: 0x90D ---- SIZE       1 ---
 Name of initialized Object : gainI
  02
-------- ROM-ADDRESS: 0xD605 ---- RAM-ADDRESS: 0x90E ---- SIZE       1 ---
+------- ROM-ADDRESS: 0xD666 ---- RAM-ADDRESS: 0x90E ---- SIZE       1 ---
 Name of initialized Object : targetSpeed
  64
-------- ROM-ADDRESS: 0xD606 ---- SIZE       2 ---
+------- ROM-ADDRESS: 0xD667 ---- SIZE       2 ---
 Filling bytes inserted
  0000
 
@@ -1772,6 +1781,8 @@ OBJECT-DEPENDENCIES SECTION
 ---------------------------------------------------------------------------------------------
 Init                      USES _startupData 
 _Startup                  USES __SEG_END_SSTACK Init main 
+readADC                   USES _ATDCTL45 _ATDSTAT0 _ATDDR0 
+configureADC              USES _ATDCTL23 _ATDCTL45 
 atdHandler                USES analogCount analogIn _ATDDR0 analogBuf 
                                 _ATDSTAT0 
 configureDCM              USES STRING.Configuring.DC.Motor.1 LCDprintf _DDRAB 
@@ -1828,7 +1839,7 @@ timer5Handler             USES hb_alarm_state hbCount _TC5
                                 STRING.Lost.heartbeat...3 LCDprintf _PORTAB _TCTL1 _CFORC 
                                 STRING.He.s.dead.Jim..Lost..4 set_hb_alarm_state 
 setHBtimer                USES hbCount hb_alarm_state set_hb_alarm_state 
-                                configureServo STRING.Heartbeat.enabled..5 LCDprintf 
+                                configureServo STRING.He.s.alive..Got.hear.5 LCDprintf 
 set_hb_alarm_state        USES hb_alarm_state 
 configureMotorControl     USES _TIOS _TCTL1 _TCNT _TC6 _TIE 
 timer6Handler             USES getTargetSpeedA speedA timer6Handler errorA 
@@ -1838,19 +1849,20 @@ timer6Handler             USES getTargetSpeedA speedA timer6Handler errorA
 main                      USES _DDRAB _PORTAB _DDRS _PTS configureTimer 
                                 configureLCD configureDCM configureServo configureHB 
                                 configureMotorControl configureSPI configureDAC configureSCI 
-                                configureStepper STRING.Hello.World.2 LCDprintf consumeSCI 
-                                _CASE_DIRECT_BYTE _CASE_SEARCH_8 main STRING.Go.home.Camera..3 
-                                setServoPosition homeStepper STRING.Camera.is.home..4 
+                                configureStepper configureADC STRING.Hello.World.2 LCDprintf 
+                                consumeSCI main STRING.Go.home.Camera..3 setServoPosition 
+                                homeStepper STRING.Camera.is.home..4 
                                 STRING.Processing.dcmParams.5 param2 param1 STRING..c.c.c.6 speedBuf sprintf 
                                 lSpeed lDir STRING..c.7 dirBuf STRING..c.c.c.8 rSpeed 
                                 rDir STRING..c.9 setHBtimer 
                                 STRING.lSpd..i.lDir..i.rSpd.10 STRING.Processing.camera.pa.11 
                                 STRING..c.c.c.12 camPos setStepperPos 
-                                STRING.Processing.camera.ti.13 STRING..c.c.c.14 
-                                STRING.Setting.motor.speeds.15 STRING..c.c.c.16 targetSpeed 
-                                STRING.Motor.speeds.set.to..17 STRING.Moving.robot..18 moveAction 
-                                STRING..c.19 STRING.lSpd..i.lDir..i.rSpd.20 
-                                STRING.Move.webcam.21 putcSCI param3 dcmControl strtol 
+                                STRING.Processing.camera.ti.13 STRING..c.c.c.14 set_hb_alarm_state 
+                                STRING.Reading.temperature..15 readADC temperature putcSCI 
+                                STRING.Temperature...c.16 STRING.Setting.motor.speeds.17 
+                                STRING..c.c.c.18 targetSpeed STRING.Motor.speeds.set.to..19 
+                                STRING.Moving.robot..20 moveAction STRING..c.21 
+                                STRING.lSpd..i.lDir..i.rSpd.22 param3 dcmControl strtol 
 vprintf                   USES vprintf _out _CASE_SEARCH_8_BYTE 
                                 _CASE_DIRECT_BYTE _CASE_SEARCH_8 pbuf _ILSEXT _LNEG pow8 _LCMP_P 
                                 pow16 pow10 
@@ -1959,14 +1971,12 @@ DEPENDENCY TREE
  |  |  |  
  |  |  +- homeStepper         
  |  |       
+ |  +- configureADC        
+ |  |    
  |  +- LCDprintf            (see above)
  |  |  
  |  +- consumeSCI          
  |  |    
- |  +- _CASE_DIRECT_BYTE    (see above)
- |  |  
- |  +- _CASE_SEARCH_8       (see above)
- |  |  
  |  +- setServoPosition     (see above)
  |  |  
  |  +- homeStepper          (see above)
@@ -1995,6 +2005,10 @@ DEPENDENCY TREE
  |  |     | 
  |  |     +- setStepperSpeed      (see above)
  |  |        
+ |  +- set_hb_alarm_state   (see above)
+ |  |  
+ |  +- readADC             
+ |  |    
  |  +- putcSCI             
  |  |    
  |  +- dcmControl          
@@ -2109,6 +2123,6 @@ STATISTIC SECTION
 
 ExeFile:
 --------
-Number of blocks to be downloaded: 15
-Total size of all blocks to be downloaded: 5660
+Number of blocks to be downloaded: 14
+Total size of all blocks to be downloaded: 5757
 

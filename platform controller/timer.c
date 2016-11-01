@@ -8,7 +8,7 @@
 #include "spi.h"
 
 // Global variable to enable or disable the heartbeat alarm clock
-unsigned char hb_alarm_state = 0;  // 0 = disabled, 1 = enabled.
+unsigned char hb_alarm_state = hbOff;  // 0 = disabled, 1 = enabled.
 
 // Temporary global variables to allow for tuning of gains
 unsigned char gainP = 2;
@@ -250,7 +250,7 @@ interrupt 13 void timer5Handler(void) {
     //DISABLE_5VA;                //Shut off the secondary power supply    
     
     LCDprintf("He's dead Jim!\nLost heartbeat.");
-    set_hb_alarm_state(0);
+    set_hb_alarm_state(hbOff);
     
     //DisableInterrupts;
     
@@ -267,9 +267,9 @@ void setHBtimer(void) {
   hbCount = 0;
     
   if(hb_alarm_state == 0) {
-    set_hb_alarm_state(1);
+    set_hb_alarm_state(hbOn);
     configureServo();
-    LCDprintf("Heartbeat\nenabled.");  
+    LCDprintf("He's alive!\nGot heartbeat.");
   }    
   
 }
