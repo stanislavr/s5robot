@@ -318,7 +318,8 @@ int doStuff(int option)
 	else if(option == 6)
 	{
 		int bRead = 0;
-		char readBuf;
+		unsigned char readBuf;
+		float temperature;
 		char attempts = 0;			// Counter for number of read attempts
 
 		printf("Getting environmental data.\n");
@@ -360,7 +361,9 @@ int doStuff(int option)
 		}
 
 		// If we got data back, it is probably the temperature...
-		printf("Temperature: %i celcius.\n", readBuf);
+		temperature = readBuf / 10.0;
+		//printf("Temperature: %i celcius.\n", readBuf);
+		printf("Temperature: %f celcius.\n", temperature);
 
 		// Send SIGUSR1 to Heartbeat process to tell it to start talking again
 		if (kill(heartbeatPid, sigUItoHB)) {
