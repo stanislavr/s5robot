@@ -36,7 +36,7 @@ _startupData is allocated at 0xC031 and uses 6 Bytes
 extern struct _tagStartup {
   unsigned nofZeroOut     1
   _Range   pZeroOut       0x900     250
-  _Copy    *toCopyDownBeg 0xD654
+  _Copy    *toCopyDownBeg 0xD655
 } _startupData;
 
 *********************************************************************************************
@@ -47,8 +47,8 @@ Section Name                    Size  Type     From       To       Segment
 .startData                        10     R     0xC031     0xC03A   ROM_C000
 .rodata                          116     R     0xC03B     0xC0AE   ROM_C000
 .rodata1                         580     R     0xC0AF     0xC2F2   ROM_C000
-.text                           4596     R     0xC2F3     0xD4E6   ROM_C000
-.copy                             21     R     0xD654     0xD668   ROM_C000
+.text                           4597     R     0xC2F3     0xD4E7   ROM_C000
+.copy                             21     R     0xD655     0xD669   ROM_C000
 .stack                           256   R/W      0x800      0x8FF   RAM
 .data                             15   R/W      0x900      0x90E   RAM
 .abs_section_8                     1   N/I        0x8        0x8   .absSeg0
@@ -283,11 +283,11 @@ Section Name                    Size  Type     From       To       Segment
 .abs_section_ffe2                  2     R     0xFFE2     0xFFE3   .absSeg229
 .bss                             218   R/W      0x90F      0x9E8   RAM
 .common                           17   R/W      0x9E9      0x9F9   RAM
-RUNTIME                          365     R     0xD4E7     0xD653   ROM_C000
+RUNTIME                          365     R     0xD4E8     0xD654   ROM_C000
 .vectSeg230_vect                   2     R     0xFFFE     0xFFFF   .vectSeg230
 
 Summary of section sizes per section type:
-READ_ONLY (R):        167D (dec:     5757)
+READ_ONLY (R):        167E (dec:     5758)
 READ_WRITE (R/W):      1FA (dec:      506)
 NO_INIT (N/I):         104 (dec:      260)
 
@@ -556,7 +556,7 @@ MODULE:                 -- lcd.c.o --
      LCDdata                                   C479      36      54       1   .text       
      LCDcmd                                    C4AF      36      54       7   .text       
      LCDputs                                   C4E5      29      41       2   .text       
-     LCDprintf                                 C50E      1C      28      23   .text       
+     LCDprintf                                 C50E      1C      28      22   .text       
 - VARIABLES:
 MODULE:                 -- servo.c.o --
 - PROCEDURES:
@@ -623,7 +623,7 @@ MODULE:                 -- timer.c.o --
      configureHB                               C8C4      11      17       1   .text       
      timer5Handler                             C8D5      45      69       1   .text       
      setHBtimer                                C91A      1A      26       2   .text       
-     set_hb_alarm_state                        C934       8       8       4   .text       
+     set_hb_alarm_state                        C934       8       8       2   .text       
      configureMotorControl                     C93C      11      17       1   .text       
      timer6Handler                             C94D      E2     226       3   .text       
 - VARIABLES:
@@ -664,7 +664,7 @@ MODULE:                 -- timer.c.o --
      _Vector_14                                FFE2       2       2       0   .abs_section_ffe2
 MODULE:                 -- main.c.o --
 - PROCEDURES:
-     main                                      CA2F     2DB     731      25   .text       
+     main                                      CA2F     2DC     732      25   .text       
 - VARIABLES:
      STRING.Hello.World.2                      C1B8       C      12       1   .rodata1    
      STRING.Go.home.Camera..3                  C1C4      10      16       1   .rodata1    
@@ -680,7 +680,7 @@ MODULE:                 -- main.c.o --
      STRING.Processing.camera.ti.13            C24A      17      23       1   .rodata1    
      STRING..c.c.c.14                          C261       7       7       1   .rodata1    
      STRING.Reading.temperature..15            C268      15      21       1   .rodata1    
-     STRING.Temperature...c.16                 C27D      10      16       1   .rodata1    
+     STRING.Temperature...i.16                 C27D      10      16       1   .rodata1    
      STRING.Setting.motor.speeds.17            C28D      15      21       1   .rodata1    
      STRING..c.c.c.18                          C2A2       7       7       1   .rodata1    
      STRING.Motor.speeds.set.to..19            C2A9      19      25       1   .rodata1    
@@ -710,17 +710,17 @@ MODULE:                 -- Start12.c.o --
      __SEG_END_SSTACK                           900       0       0       1               
 MODULE:                 -- CTYPE.C.o (ansisi.lib) --
 - PROCEDURES:
-     isdigit                                   CD0A       E      14       1   .text       
-     isspace                                   CD18      17      23       2   .text       
-     toupper                                   CD2F      14      20       3   .text       
+     isdigit                                   CD0B       E      14       1   .text       
+     isspace                                   CD19      17      23       2   .text       
+     toupper                                   CD30      14      20       3   .text       
 - VARIABLES:
 MODULE:                 -- PRINTF.C.o (ansisi.lib) --
 - PROCEDURES:
-     vprintf                                   CD43     478    1144      50   .text       
-     _out                                      D1BB       C      12       9   .text       
-     deposit_char                              D1C7       F      15       2   .text       
-     sprintf                                   D1D6      29      41       8   .text       
-     vsprintf                                  D1FF      29      41       1   .text       
+     vprintf                                   CD44     478    1144      50   .text       
+     _out                                      D1BC       C      12       9   .text       
+     deposit_char                              D1C8       F      15       2   .text       
+     sprintf                                   D1D7      29      41       8   .text       
+     vsprintf                                  D200      29      41       1   .text       
 - VARIABLES:
      pow10                                     C03B      28      40       4   .rodata     
      pow16                                     C063      20      32       4   .rodata     
@@ -728,31 +728,31 @@ MODULE:                 -- PRINTF.C.o (ansisi.lib) --
      pbuf                                       9E2       6       6      21   .bss        
 MODULE:                 -- STDLIB.C.o (ansisi.lib) --
 - PROCEDURES:
-     CheckCharWithBase                         D228      39      57       1   .text       
-     _strtoul                                  D261     170     368       8   .text       
-     _strtol                                   D3D1      D0     208       3   .text       
-     strtol                                    D4A1      13      19       2   .text       
+     CheckCharWithBase                         D229      39      57       1   .text       
+     _strtoul                                  D262     170     368       8   .text       
+     _strtol                                   D3D2      D0     208       3   .text       
+     strtol                                    D4A2      13      19       2   .text       
 - VARIABLES:
 MODULE:                 -- rtshc12.c.o (ansisi.lib) --
 - PROCEDURES:
-     _LCMP_P                                   D4E7      15      21       4   RUNTIME     
-     _LNEG                                     D4FC       D      13       3   RUNTIME     
-     _LMULU16x32                               D509       F      15       1   RUNTIME     
-     _LMULS16x32                               D518      1F      31       1   RUNTIME     
-     _lDivMod                                  D537      BE     190       1   RUNTIME     
-     _LDIVU                                    D5F5       E      14       2   RUNTIME     
-     _ILSEXT                                   D603       7       7       7   RUNTIME     
-     _CASE_DIRECT_BYTE                         D60A       5       5       1   RUNTIME     
-     _CASE_CHECKED_BYTE                        D60F      14      20       2   RUNTIME     
-     _CASE_SEARCH_8                            D623      17      23       1   RUNTIME     
-     _CASE_SEARCH_8_BYTE                       D63A      1A      26       1   RUNTIME     
+     _LCMP_P                                   D4E8      15      21       4   RUNTIME     
+     _LNEG                                     D4FD       D      13       3   RUNTIME     
+     _LMULU16x32                               D50A       F      15       1   RUNTIME     
+     _LMULS16x32                               D519      1F      31       1   RUNTIME     
+     _lDivMod                                  D538      BE     190       1   RUNTIME     
+     _LDIVU                                    D5F6       E      14       2   RUNTIME     
+     _ILSEXT                                   D604       7       7       7   RUNTIME     
+     _CASE_DIRECT_BYTE                         D60B       5       5       1   RUNTIME     
+     _CASE_CHECKED_BYTE                        D610      14      20       2   RUNTIME     
+     _CASE_SEARCH_8                            D624      17      23       1   RUNTIME     
+     _CASE_SEARCH_8_BYTE                       D63B      1A      26       1   RUNTIME     
 - VARIABLES:
      errno                                      9F8       2       2       2   .common     
 MODULE:                 -- spi.c.o --
 - PROCEDURES:
-     configureSPI                              D4B4       F      15       1   .text       
-     putcSPI                                   D4C3      14      20       2   .text       
-     configureDAC                              D4D7      10      16       1   .text       
+     configureSPI                              D4B5       F      15       1   .text       
+     putcSPI                                   D4C4      14      20       2   .text       
+     configureDAC                              D4D8      10      16       1   .text       
 - VARIABLES:
      temp.1                                     9E8       1       1       1   .bss        
 
@@ -768,7 +768,7 @@ MODULE STATISTIC
   sci.c.o                                     26    172     38
   stepper.c.o                                 28    352     66
   timer.c.o                                   59    632     85
-  main.c.o                                    16    731    315
+  main.c.o                                    16    732    315
   Start12.c.o                                  0     49      0
   CTYPE.C.o (ansisi.lib)                       0     57      0
   PRINTF.C.o (ansisi.lib)                      6   1253    116
@@ -815,7 +815,7 @@ SECTION: ".rodata1"
   STRING.Processing.dcmParams.5 STRING..c.c.c.6 STRING..c.7 STRING..c.c.c.8 
   STRING..c.9 STRING.lSpd..i.lDir..i.rSpd.10 STRING.Processing.camera.pa.11 
   STRING..c.c.c.12 STRING.Processing.camera.ti.13 STRING..c.c.c.14 
-  STRING.Reading.temperature..15 STRING.Temperature...c.16 
+  STRING.Reading.temperature..15 STRING.Temperature...i.16 
   STRING.Setting.motor.speeds.17 STRING..c.c.c.18 
   STRING.Motor.speeds.set.to..19 STRING.Moving.robot..20 STRING..c.21 
   STRING.lSpd..i.lDir..i.rSpd.22 
@@ -1615,7 +1615,7 @@ OBJECT LIST SORTED BY ADDRESS
      STRING.Processing.camera.ti.13            C24A      17      23       1   .rodata1    
      STRING..c.c.c.14                          C261       7       7       1   .rodata1    
      STRING.Reading.temperature..15            C268      15      21       1   .rodata1    
-     STRING.Temperature...c.16                 C27D      10      16       1   .rodata1    
+     STRING.Temperature...i.16                 C27D      10      16       1   .rodata1    
      STRING.Setting.motor.speeds.17            C28D      15      21       1   .rodata1    
      STRING..c.c.c.18                          C2A2       7       7       1   .rodata1    
      STRING.Motor.speeds.set.to..19            C2A9      19      25       1   .rodata1    
@@ -1634,7 +1634,7 @@ OBJECT LIST SORTED BY ADDRESS
      LCDdata                                   C479      36      54       1   .text       
      LCDcmd                                    C4AF      36      54       7   .text       
      LCDputs                                   C4E5      29      41       2   .text       
-     LCDprintf                                 C50E      1C      28      23   .text       
+     LCDprintf                                 C50E      1C      28      22   .text       
      configureServo                            C52A      34      52       2   .text       
      timer2handler                             C55E      27      39       1   .text       
      setServoPosition                          C585      26      38       3   .text       
@@ -1657,36 +1657,36 @@ OBJECT LIST SORTED BY ADDRESS
      configureHB                               C8C4      11      17       1   .text       
      timer5Handler                             C8D5      45      69       1   .text       
      setHBtimer                                C91A      1A      26       2   .text       
-     set_hb_alarm_state                        C934       8       8       4   .text       
+     set_hb_alarm_state                        C934       8       8       2   .text       
      configureMotorControl                     C93C      11      17       1   .text       
      timer6Handler                             C94D      E2     226       3   .text       
-     main                                      CA2F     2DB     731      25   .text       
-     isdigit                                   CD0A       E      14       1   .text       
-     isspace                                   CD18      17      23       2   .text       
-     toupper                                   CD2F      14      20       3   .text       
-     vprintf                                   CD43     478    1144      50   .text       
-     _out                                      D1BB       C      12       9   .text       
-     deposit_char                              D1C7       F      15       2   .text       
-     sprintf                                   D1D6      29      41       8   .text       
-     vsprintf                                  D1FF      29      41       1   .text       
-     CheckCharWithBase                         D228      39      57       1   .text       
-     _strtoul                                  D261     170     368       8   .text       
-     _strtol                                   D3D1      D0     208       3   .text       
-     strtol                                    D4A1      13      19       2   .text       
-     configureSPI                              D4B4       F      15       1   .text       
-     putcSPI                                   D4C3      14      20       2   .text       
-     configureDAC                              D4D7      10      16       1   .text       
-     _LCMP_P                                   D4E7      15      21       4   RUNTIME     
-     _LNEG                                     D4FC       D      13       3   RUNTIME     
-     _LMULU16x32                               D509       F      15       1   RUNTIME     
-     _LMULS16x32                               D518      1F      31       1   RUNTIME     
-     _lDivMod                                  D537      BE     190       1   RUNTIME     
-     _LDIVU                                    D5F5       E      14       2   RUNTIME     
-     _ILSEXT                                   D603       7       7       7   RUNTIME     
-     _CASE_DIRECT_BYTE                         D60A       5       5       1   RUNTIME     
-     _CASE_CHECKED_BYTE                        D60F      14      20       2   RUNTIME     
-     _CASE_SEARCH_8                            D623      17      23       1   RUNTIME     
-     _CASE_SEARCH_8_BYTE                       D63A      1A      26       1   RUNTIME     
+     main                                      CA2F     2DC     732      25   .text       
+     isdigit                                   CD0B       E      14       1   .text       
+     isspace                                   CD19      17      23       2   .text       
+     toupper                                   CD30      14      20       3   .text       
+     vprintf                                   CD44     478    1144      50   .text       
+     _out                                      D1BC       C      12       9   .text       
+     deposit_char                              D1C8       F      15       2   .text       
+     sprintf                                   D1D7      29      41       8   .text       
+     vsprintf                                  D200      29      41       1   .text       
+     CheckCharWithBase                         D229      39      57       1   .text       
+     _strtoul                                  D262     170     368       8   .text       
+     _strtol                                   D3D2      D0     208       3   .text       
+     strtol                                    D4A2      13      19       2   .text       
+     configureSPI                              D4B5       F      15       1   .text       
+     putcSPI                                   D4C4      14      20       2   .text       
+     configureDAC                              D4D8      10      16       1   .text       
+     _LCMP_P                                   D4E8      15      21       4   RUNTIME     
+     _LNEG                                     D4FD       D      13       3   RUNTIME     
+     _LMULU16x32                               D50A       F      15       1   RUNTIME     
+     _LMULS16x32                               D519      1F      31       1   RUNTIME     
+     _lDivMod                                  D538      BE     190       1   RUNTIME     
+     _LDIVU                                    D5F6       E      14       2   RUNTIME     
+     _ILSEXT                                   D604       7       7       7   RUNTIME     
+     _CASE_DIRECT_BYTE                         D60B       5       5       1   RUNTIME     
+     _CASE_CHECKED_BYTE                        D610      14      20       2   RUNTIME     
+     _CASE_SEARCH_8                            D624      17      23       1   RUNTIME     
+     _CASE_SEARCH_8_BYTE                       D63B      1A      26       1   RUNTIME     
      _Vector_22                                FFD2       2       2       0   .abs_section_ffd2
      _Vector_20                                FFD6       2       2       0   .abs_section_ffd6
      _Vector_16                                FFDE       2       2       0   .abs_section_ffde
@@ -1748,31 +1748,31 @@ rtshc12.c.o (ansisi.lib):
 *********************************************************************************************
 COPYDOWN SECTION
 ---------------------------------------------------------------------------------------------
-------- ROM-ADDRESS: 0xD654 ---- SIZE       4 ---
+------- ROM-ADDRESS: 0xD655 ---- SIZE       4 ---
 Filling bytes inserted
  000F0900
-------- ROM-ADDRESS: 0xD658 ---- RAM-ADDRESS: 0x900 ---- SIZE       1 ---
+------- ROM-ADDRESS: 0xD659 ---- RAM-ADDRESS: 0x900 ---- SIZE       1 ---
 Name of initialized Object : targetA
  32
-------- ROM-ADDRESS: 0xD659 ---- RAM-ADDRESS: 0x901 ---- SIZE       1 ---
+------- ROM-ADDRESS: 0xD65A ---- RAM-ADDRESS: 0x901 ---- SIZE       1 ---
 Name of initialized Object : targetB
  32
-------- ROM-ADDRESS: 0xD65A ---- RAM-ADDRESS: 0x902 ---- SIZE       8 ---
+------- ROM-ADDRESS: 0xD65B ---- RAM-ADDRESS: 0x902 ---- SIZE       8 ---
 Name of initialized Object : pTable
  80A0206040 501090
-------- ROM-ADDRESS: 0xD662 ---- RAM-ADDRESS: 0x90A ---- SIZE       2 ---
+------- ROM-ADDRESS: 0xD663 ---- RAM-ADDRESS: 0x90A ---- SIZE       2 ---
 Name of initialized Object : steps2move
  FFFF
-------- ROM-ADDRESS: 0xD664 ---- RAM-ADDRESS: 0x90C ---- SIZE       1 ---
+------- ROM-ADDRESS: 0xD665 ---- RAM-ADDRESS: 0x90C ---- SIZE       1 ---
 Name of initialized Object : gainP
  02
-------- ROM-ADDRESS: 0xD665 ---- RAM-ADDRESS: 0x90D ---- SIZE       1 ---
+------- ROM-ADDRESS: 0xD666 ---- RAM-ADDRESS: 0x90D ---- SIZE       1 ---
 Name of initialized Object : gainI
  02
-------- ROM-ADDRESS: 0xD666 ---- RAM-ADDRESS: 0x90E ---- SIZE       1 ---
+------- ROM-ADDRESS: 0xD667 ---- RAM-ADDRESS: 0x90E ---- SIZE       1 ---
 Name of initialized Object : targetSpeed
  64
-------- ROM-ADDRESS: 0xD667 ---- SIZE       2 ---
+------- ROM-ADDRESS: 0xD668 ---- SIZE       2 ---
 Filling bytes inserted
  0000
 
@@ -1857,9 +1857,9 @@ main                      USES _DDRAB _PORTAB _DDRS _PTS configureTimer
                                 rDir STRING..c.9 setHBtimer 
                                 STRING.lSpd..i.lDir..i.rSpd.10 STRING.Processing.camera.pa.11 
                                 STRING..c.c.c.12 camPos setStepperPos 
-                                STRING.Processing.camera.ti.13 STRING..c.c.c.14 set_hb_alarm_state 
+                                STRING.Processing.camera.ti.13 STRING..c.c.c.14 
                                 STRING.Reading.temperature..15 readADC temperature putcSCI 
-                                STRING.Temperature...c.16 STRING.Setting.motor.speeds.17 
+                                STRING.Temperature...i.16 STRING.Setting.motor.speeds.17 
                                 STRING..c.c.c.18 targetSpeed STRING.Motor.speeds.set.to..19 
                                 STRING.Moving.robot..20 moveAction STRING..c.21 
                                 STRING.lSpd..i.lDir..i.rSpd.22 param3 dcmControl strtol 
@@ -2005,8 +2005,6 @@ DEPENDENCY TREE
  |  |     | 
  |  |     +- setStepperSpeed      (see above)
  |  |        
- |  +- set_hb_alarm_state   (see above)
- |  |  
  |  +- readADC             
  |  |    
  |  +- putcSCI             
@@ -2123,6 +2121,6 @@ STATISTIC SECTION
 
 ExeFile:
 --------
-Number of blocks to be downloaded: 14
-Total size of all blocks to be downloaded: 5757
+Number of blocks to be downloaded: 15
+Total size of all blocks to be downloaded: 5758
 

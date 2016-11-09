@@ -159,18 +159,19 @@ void main(void) {
       // Case E == Send environmental logger data
       case 'E':
         // Turn off heartbeat
-        set_hb_alarm_state(hbOff);
+        //set_hb_alarm_state(hbOff);
         
         // Read temperature from ADC
         LCDprintf("Reading\ntemperature.");
-        temperature = readADC(ATD5);
+        temperature = (readADC(ATD5)*1300/256) - 295;
+        //temperature = readADC(ATD5);
 
         // Send temperature.
         putcSCI(temperature);                
-        LCDprintf("Temperature:\n%c", temperature);
+        LCDprintf("Temperature:\n%i", temperature);
         
         // Re-enable heartbeart
-        set_hb_alarm_state(hbOn);                                  6
+        //set_hb_alarm_state(hbOn);                                
         break;       
       
       // Case S == Set DC motor target speeds
